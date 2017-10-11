@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
+	<classpathentry kind="con" path="REPAST_SIMPHONY_SUPPORT"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/pedro/Documents/libs/SAJaS-v0.92b/lib/SAJaS.jar"/>
+	<classpathentry kind="lib" path="/home/pedro/Documents/libs/jade/lib/jade.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
