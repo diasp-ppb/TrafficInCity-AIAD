@@ -1,0 +1,33 @@
+{
+	"name" : "city1",
+	
+	"street" : [
+	{
+		"name": "street1",
+		"start":[0,0],
+		"end": [0,3]			
+	},
+	{
+		"name": "street2",
+		"start":[0,3],
+		"end": [3,3]			
+	},
+	{
+		"name": "street3",
+		"start":[3,3],
+		"end": [3,0]			
+	},
+	{
+		"name": "street4",
+		"start":[3,0],
+		"end": [0,0]			
+	}
+	],
+	
+	"intersections": [
+	  [0,0],
+	  [3,0],
+	  [0,3],
+	  [3,3]
+	 ]
+}
