@@ -1,6 +1,8 @@
 package trafficInCity;
 
 
+import java.util.Random;
+
 import repast.simphony.context.Context;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactory;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
@@ -33,20 +35,35 @@ public class CarFactory implements ContextBuilder < Object > {
 				new GridBuilderParameters < Object >( new WrapAroundBorders() ,new SimpleGridAdder < Object >() ,true , 50 , 50)
 				);
 
-//		int  carCount = 5;
-//
-//		for (int i = 0; i < carCount; i++) {			
-//			context.add(new  ShortestPathCar(space , grid ));
-//		}
+		int  carCount = 1;
+
+		for (int i = 0; i < carCount; i++) {			
+			Random rand = new Random();
+			int ix = rand.nextInt(50);
+			int iy = rand.nextInt(50);
+			int fx = rand.nextInt(50);
+			int fy = rand.nextInt(50);
+			
+			System.out.println("Inicial: " + ix + ", " + iy);
+			System.out.println("Final: " + fx + ", " + fy);
+			
+			
+			NdPoint initP = new NdPoint(ix, iy); 
+			NdPoint finalP = new NdPoint(fx, fy); 
+			
+			context.add(new ShortestPathCar(space, grid, initP, finalP));
+		}
 		
 		context.add(new Semaphore(space, false, 10));
 
 		for (Object  obj : context) {
-
-			NdPoint  pt = space.getLocation(obj);
-
-			//grid.moveTo(obj , (int)pt.getX(), (int)pt.getY ());
-
+			NdPoint pt = space.getLocation(obj);
+			grid.moveTo(obj, (int)pt.getX(), (int)pt.getY());
+			
+			if(obj instanceof ShortestPathCar) {
+				ShortestPathCar s = (ShortestPathCar) obj;
+				s.initiatePos();
+			}
 		}
 
 		return context ;

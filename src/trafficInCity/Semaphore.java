@@ -21,7 +21,7 @@ public class Semaphore extends Agent{
 	
 	@Override
 	public void setup() {
-		System.out.println();
+		System.out.println("Oi, sou o semáforo");
 	}
 	
 	public boolean isSemaphoreGreen() {

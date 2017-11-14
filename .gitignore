@@ -3,4 +3,6 @@
 
 debug.log
 bin/
+*.class
 *.log
+*.log.*

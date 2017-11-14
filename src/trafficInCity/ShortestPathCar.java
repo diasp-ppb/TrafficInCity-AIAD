@@ -1,5 +1,7 @@
 package trafficInCity;
 
+import java.util.Random;
+
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
@@ -8,34 +10,32 @@ import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 
 
-public class ShortestPathCar {
+public class ShortestPathCar extends Car {
 
-	private ContinuousSpace < Object > space ;
-	private Grid < Object > grid ;
 
-	public ShortestPathCar ( ContinuousSpace < Object > space , Grid < Object > grid ) {
-		this.space = space ;
-		this.grid = grid ;
+	public ShortestPathCar (ContinuousSpace<Object> space, Grid<Object> grid, NdPoint initialPos, NdPoint finalPos) {
+		super(space, grid, initialPos, finalPos);
 	}
 	
-	@ScheduledMethod ( start = 1 , interval = 1)
-	public void step () {
-		// get the grid location of this Zombie
-		GridPoint pt = grid.getLocation ( this );
-		System.out.println(pt);
+	@ScheduledMethod (start = 1 , interval = 1)
+	public void move() {
+		int x = (int)finalPos.getX() - (int)actualPos().getX();
+		int y = (int)finalPos.getY() - (int)actualPos().getY();
 		
-		GridPoint moveCar = new GridPoint(pt.getX()+1, pt.getY());
-		
-		moveTowards (moveCar);
-	}
-	
-	public void moveTowards ( GridPoint pt ) {
-		
-			NdPoint myPoint = this.space.getLocation (this );
-			NdPoint otherPoint = new NdPoint ( pt.getX() , pt.getY());
-			double angle = SpatialMath.calcAngleFor2DMovement(this.space ,myPoint , otherPoint );
-			this.space.moveByVector ( this , 1 , angle , 0);
-			myPoint = this.space.getLocation ( this );
-			this.grid.moveTo( this , ( int ) myPoint . getX () , ( int ) myPoint . getY ());
+		if(Math.abs(x)+Math.abs(y) != 0) {
+			NdPoint newPos = defineMovement(x, y);
+			updatePos(newPos);
+			moveInSpace();
 		}
+	}
+	
+	public NdPoint defineMovement(int x, int y) {
+		System.out.println("Actual: " + (int)actualPos().getX() + ", " + (int)actualPos().getY());
+		
+		if(Math.abs(x) > Math.abs(y))
+			return new NdPoint(grid.getLocation(this).getX()+(x/Math.abs(x)), grid.getLocation(this).getY());
+		else
+			return new NdPoint(grid.getLocation(this).getX(), grid.getLocation(this).getY()+(y/Math.abs(y)));
+		
+	}
 }
