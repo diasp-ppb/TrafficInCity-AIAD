@@ -1,0 +1,6 @@
+/trafficInCity/
+/serviceConsumerProviderVis/
+
+debug.log
+bin/
+*.log

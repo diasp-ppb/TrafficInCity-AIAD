@@ -33,17 +33,19 @@ public class CarFactory implements ContextBuilder < Object > {
 				new GridBuilderParameters < Object >( new WrapAroundBorders() ,new SimpleGridAdder < Object >() ,true , 50 , 50)
 				);
 
-		int  carCount = 5;
-
-		for (int i = 0; i < carCount; i++) {			
-			context.add(new  ShortestPathCar(space , grid ));
-		}
+//		int  carCount = 5;
+//
+//		for (int i = 0; i < carCount; i++) {			
+//			context.add(new  ShortestPathCar(space , grid ));
+//		}
+		
+		context.add(new Semaphore(space, false, 10));
 
 		for (Object  obj : context) {
 
 			NdPoint  pt = space.getLocation(obj);
 
-			grid.moveTo(obj , (int)pt.getX(), (int)pt.getY ());
+			//grid.moveTo(obj , (int)pt.getX(), (int)pt.getY ());
 
 		}
 

@@ -1,15 +1,15 @@
 <repast.simphony.visualization.engine.CartesianDisplayDescriptor simphonyVersion="2.5.0">
-  <name>Simulation</name>
+  <name>Road</name>
   <type>2D</type>
   <styles>
     <entry>
-      <string>trafficInCity.ShortestPathCar</string>
-      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
+      <string>trafficInCity.Semaphore</string>
+      <string>trafficInCity.SemaphoreColor</string>
     </entry>
   </styles>
   <editedStyles>
     <entry>
-      <string>trafficInCity.ShortestPathCar</string>
+      <string>trafficInCity.Semaphore</string>
       <null/>
     </entry>
   </editedStyles>
@@ -23,14 +23,14 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-1480716218</hashCode>
+    <hashCode>-265769021</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>trafficInCity.ShortestPathCar</string>
+      <string>trafficInCity.Semaphore</string>
       <int>0</int>
     </entry>
   </layerOrder>
