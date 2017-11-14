@@ -47,7 +47,6 @@ public class CarFactory implements ContextBuilder < Object > {
 			System.out.println("Inicial: " + ix + ", " + iy);
 			System.out.println("Final: " + fx + ", " + fy);
 			
-			
 			NdPoint initP = new NdPoint(ix, iy); 
 			NdPoint finalP = new NdPoint(fx, fy); 
 			
