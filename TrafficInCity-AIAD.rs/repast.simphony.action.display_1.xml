@@ -8,7 +8,7 @@
     </entry>
     <entry>
       <string>trafficInCity.ShortestPathCar</string>
-      <string>repast.simphony.visualizationOGL2D.DefaultStyleOGL2D</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
   </styles>
   <editedStyles>
@@ -18,7 +18,7 @@
     </entry>
     <entry>
       <string>trafficInCity.ShortestPathCar</string>
-      <null/>
+      <string>trafficInCity.ShortestPathCar.style_3.xml</string>
     </entry>
   </editedStyles>
   <netStyles/>
@@ -31,7 +31,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-2077365149</hashCode>
+    <hashCode>-1703715981</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>

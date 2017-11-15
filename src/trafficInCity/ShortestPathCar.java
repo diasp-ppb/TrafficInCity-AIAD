@@ -2,6 +2,7 @@ package trafficInCity;
 
 import java.util.Random;
 
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
@@ -13,8 +14,8 @@ import repast.simphony.space.grid.GridPoint;
 public class ShortestPathCar extends Car {
 
 
-	public ShortestPathCar (ContinuousSpace<Object> space, Grid<Object> grid, NdPoint initialPos, NdPoint finalPos) {
-		super(space, grid, initialPos, finalPos);
+	public ShortestPathCar (ContinuousSpace<Object> space, Grid<Object> grid, NdPoint finalPos) {
+		super(space, grid, finalPos);
 	}
 	
 	@ScheduledMethod (start = 1 , interval = 1)
@@ -27,6 +28,8 @@ public class ShortestPathCar extends Car {
 			updatePos(newPos);
 			moveInSpace();
 		}
+		
+		RunEnvironment.getInstance().setScheduleTickDelay(20);
 	}
 	
 	public NdPoint defineMovement(int x, int y) {

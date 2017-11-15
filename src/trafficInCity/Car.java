@@ -14,16 +14,14 @@ public class Car extends Agent{
 	protected NdPoint initialPos;
 	protected NdPoint finalPos;
 	
-	public Car(ContinuousSpace<Object> space, Grid<Object> grid, NdPoint initialPos, NdPoint finalPos) {
+	public Car(ContinuousSpace<Object> space, Grid<Object> grid, NdPoint finalPos) {
 		this.space = space;
 		this.grid = grid;
-		this.initialPos = initialPos;
 		this.finalPos = finalPos;
 	}
 	
-	public void initiatePos() {
-		int[] pos = {(int) initialPos.getX(), (int) initialPos.getY()};		
-		grid.moveTo(this, pos);
+	public void initiatePos(NdPoint initialPos) {
+		this.initialPos = initialPos;
 	}
 	
 	public NdPoint getInitialPos() {
