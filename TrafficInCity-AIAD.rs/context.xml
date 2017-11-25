@@ -2,6 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:noNamespaceSchemaLocation="http://repast.org/scenario/context">
   	
-  	<projection type ="continuous space" id ="space" />
-	<projection type ="grid" id="grid" />
+  	<context id="roadContext">
+		<projection type="geography" id="roadGeography"></projection>
+	</context>
 </context>

@@ -9,7 +9,7 @@ public class Junction {
 	public static int UniqueID = 0;
 	private int id ;
 	private Coordinate coord;
-	//private List<Road> roads; // The Roads connected to this Junction, used in GIS road network
+	private List<Road> roads; // The Roads connected to this Junction, used in GIS road network
 
 	public int getId() {
 		return id;
@@ -20,7 +20,7 @@ public class Junction {
 		return "Junction "+this.id+": ("+this.coord.x+","+this.coord.y+")";
 	}
 	
-	/*
+	
 	public List<Road> getRoads() {
 		return this.roads;
 	}
@@ -28,7 +28,7 @@ public class Junction {
 	public void addRoad(Road road) {
 		this.roads.add(road);
 	}
-	*/
+	
 	
 	public Coordinate getCoords() {
 		return coord;

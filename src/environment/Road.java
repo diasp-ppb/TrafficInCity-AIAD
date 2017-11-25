@@ -29,7 +29,7 @@ public class Road implements FixedGeography, Identified {
 	private Coordinate coord;
 	
 	/*transient*/
-	//private NetworkEdge<Junction> edge;
+	private NetworkEdge<Junction> edge;
 	
 	private String access;
 	private List<String> accessibility;
@@ -131,16 +131,16 @@ public class Road implements FixedGeography, Identified {
 		this.coord = coord;
 	}
 	
-	/*
+	
 	public NetworkEdge<Junction> getEdge() {
 		return edge;
 	}
-	 */
-	/*
+	
+	
 	public void setEdge(NetworkEdge<Junction> edge) {
 		this.edge = edge;
 	}
-	*/
+	
 	public String getName() {
 		return this.name;
 	}
