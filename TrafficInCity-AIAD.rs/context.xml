@@ -5,4 +5,8 @@
   	<context id="roadContext">
 		<projection type="geography" id="roadGeography"></projection>
 	</context>
+	
+	<context id="carContext">
+		<projection type="geography" id="carGeography"></projection>
+	</context>
 </context>

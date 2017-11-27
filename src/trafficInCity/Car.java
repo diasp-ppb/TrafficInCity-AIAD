@@ -2,51 +2,33 @@ package trafficInCity;
 
 import java.io.Serializable;
 
+import com.vividsolutions.jts.geom.Point;
+
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
+import repast.simphony.space.gis.Geography;
 import repast.simphony.space.grid.Grid;
 import sajas.core.Agent;
 
 public class Car extends Agent{
-	protected ContinuousSpace<Object> space;
-	protected Grid<Object> grid;
-	protected NdPoint initialPos;
-	protected NdPoint finalPos;
+	protected Geography<? extends Car> space;
+	protected Point finalPos;
 	
-	public Car(ContinuousSpace<Object> space, Grid<Object> grid, NdPoint initialPos, NdPoint finalPos) {
+	public Car(Geography<? extends Car> space) {
 		this.space = space;
-		this.grid = grid;
-		this.initialPos = initialPos;
-		this.finalPos = finalPos;
 	}
 	
-	public void initiatePos() {
-		int[] pos = {(int) initialPos.getX(), (int) initialPos.getY()};		
-		grid.moveTo(this, pos);
+	public Point getFinalPos() {
+		return finalPos;
 	}
 	
-	public NdPoint getInitialPos() {
-		return initialPos;
+	public Point actualPos() {
+		return space.getGeometry(this).getCentroid();
 	}
-	
-	public NdPoint getFinalPos() {
-		return initialPos;
-	}
-	
-	public NdPoint actualPos() {
-		return space.getLocation(this);
-	}
-	
-	public void updatePos(NdPoint newPos) {
-		int[] pos = {(int) newPos.getX(), (int) newPos.getY()};
-		grid.moveTo(this, pos);
-	}
-	
-	public void moveInSpace() {
-		NdPoint actualPos = space.getLocation(this);
-		NdPoint nextPos = new NdPoint(grid.getLocation(this).getX(), grid.getLocation(this).getY());
-		double angle = SpatialMath.calcAngleFor2DMovement(this.space, actualPos, nextPos);
-		this.space.moveByVector(this, 1, angle, 0);
-	}
+//	
+//	public void moveInSpace(Point nextPos) {
+//		Point actualPos = actualPos();
+//		this.space.move(this, nextPos);;
+//	}
 }
