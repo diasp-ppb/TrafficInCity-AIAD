@@ -1,22 +1,17 @@
 package trafficInCity;
 
-import java.io.Serializable;
-
 import com.vividsolutions.jts.geom.Point;
 
-import repast.simphony.space.SpatialMath;
-import repast.simphony.space.continuous.ContinuousSpace;
-import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.gis.Geography;
-import repast.simphony.space.grid.Grid;
 import sajas.core.Agent;
 
 public class Car extends Agent{
 	protected Geography<? extends Car> space;
 	protected Point finalPos;
 	
-	public Car(Geography<? extends Car> space) {
+	public Car(Geography<? extends Car> space, Point finalPos) {
 		this.space = space;
+		this.finalPos = finalPos;
 	}
 	
 	public Point getFinalPos() {

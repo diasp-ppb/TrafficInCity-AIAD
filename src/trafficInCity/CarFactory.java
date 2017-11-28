@@ -14,11 +14,13 @@ public class CarFactory {
 	
 		for(int i = 0; i < numCars; i++) {
 			Iterator<Road> road = ContextManager.roadContext.getRandomObjects(Road.class,numCars).iterator();
+			Iterator<Road> roadF = ContextManager.roadContext.getRandomObjects(Road.class,numCars).iterator();
 			
 			while(road.hasNext() && i < numCars) {
-				Road nextRoad = road.next();
-				Car car = new Car(carProjection);
+				Road finalRoad = roadF.next();
+				ShortestPathCar car = new ShortestPathCar(carProjection, ContextManager.roadProjection.getGeometry(finalRoad).getCentroid());
 				ContextManager.addCarToContext(car);
+				Road nextRoad = road.next();
 				ContextManager.moveAgent(car, ContextManager.roadProjection.getGeometry(nextRoad).getCentroid());
 				i++;
 			}

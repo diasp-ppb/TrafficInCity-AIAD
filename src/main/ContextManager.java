@@ -11,6 +11,7 @@ import trafficInCity.CarFactory;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
+import java.util.Iterator;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -81,5 +82,20 @@ public class ContextManager  implements ContextBuilder <Object>{
 	public static synchronized void moveAgent(Car car, Point point ) {
 		ContextManager.carProjection.move(car, point);
 		System.out.println(ContextManager.carProjection.getGeometry(car).equals(point));
+	}
+	
+	public static synchronized void moveAgentInStreet(Car car) {
+		Iterator<Road> roads = ContextManager.roadContext.getRandomObjects(Road.class, 10).iterator();
+		Point finalPoint = car.getFinalPos();
+		Point nextPos = car.actualPos();
+		if(!ContextManager.carProjection.getGeometry(car).equals(finalPoint)) {
+			while(roads.hasNext()) {
+				if(roads.hasNext()) {
+					nextPos = ContextManager.roadProjection.getGeometry(roads.next()).getCentroid();
+				}
+			}
+			ContextManager.carProjection.move(car, nextPos);
+			System.out.println(nextPos);
+		}
 	}
 }
