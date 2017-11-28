@@ -78,10 +78,8 @@ public class ContextManager  implements ContextBuilder <Object>{
 		ContextManager.carContext.add(car);
 	}
 	
-	public static synchronized void moveAgent(Car car) {
-		Coordinate coord = new Coordinate(53.83, -1.52);
-		Point p = GF.createPoint(coord);
-		ContextManager.carProjection.move(car, p);
-		System.out.println(ContextManager.carProjection.getGeometry(car).equals(p));
+	public static synchronized void moveAgent(Car car, Point point ) {
+		ContextManager.carProjection.move(car, point);
+		System.out.println(ContextManager.carProjection.getGeometry(car).equals(point));
 	}
 }

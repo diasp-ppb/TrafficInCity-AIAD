@@ -22,7 +22,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>1008881016</hashCode>
+    <hashCode>-859685905</hashCode>
   </schedParams>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
@@ -34,17 +34,21 @@
       <string>trafficInCity.Car</string>
       <int>0</int>
     </entry>
+    <entry>
+      <string>data/gis_data/toy_city/roads.shp</string>
+      <int>3</int>
+    </entry>
   </layerOrder>
   <projections>
     <repast.simphony.scenario.data.ProjectionData>
-      <id>roadGeography</id>
+      <id>carGeography</id>
       <attributes/>
       <type>geography</type>
     </repast.simphony.scenario.data.ProjectionData>
   </projections>
   <projectionDescriptors>
     <entry>
-      <string>roadGeography</string>
+      <string>carGeography</string>
       <repast.simphony.visualization.gis.GisProjectionDescriptor>
         <proj reference="../../../../projections/repast.simphony.scenario.data.ProjectionData"/>
         <props/>
@@ -57,10 +61,5 @@
       <map/>
     </entry>
   </props>
-  <renderQuality>MEDIUM</renderQuality>
-  <viewType>FLAT</viewType>
   <trackAgents>false</trackAgents>
-  <globeLayers/>
-  <staticCoverages/>
-  <coverageLayers/>
 </repast.simphony.gis.visualization.engine.GISDisplayDescriptor>

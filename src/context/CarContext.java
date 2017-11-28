@@ -6,7 +6,7 @@ import trafficInCity.Car;
 public class CarContext extends DefaultContext<Car>{
 	
 	public CarContext() {
-		super("carContext");
+		super("CarContext");
 	}
 	
 }
