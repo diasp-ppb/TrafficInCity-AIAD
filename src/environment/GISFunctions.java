@@ -98,8 +98,8 @@ public class GISFunctions {
 			if (!roadNetwork.containsEdge(edge)) {
 				roadNetwork.addEdge(edge);
 			} else {
-				System.out.println("CityContext: buildRoadNetwork: for some reason this edge that has just been created "
-				+ "already exists in the RoadNetwork.");
+				System.out.println("buildRoadNetwork: for some reason this edge that has just been created "
+			                    	+ "already exists in the RoadNetwork.");
 			}
 
 		}

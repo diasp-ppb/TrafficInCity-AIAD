@@ -1,5 +1,6 @@
 package environment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -10,7 +11,13 @@ public class Junction {
 	private int id ;
 	private Coordinate coord;
 	private List<Road> roads; // The Roads connected to this Junction, used in GIS road network
-
+    
+	public Junction () {
+		roads = new ArrayList<Road>();
+		id = UniqueID;
+		UniqueID++;
+	}
+	
 	public int getId() {
 		return id;
 	}

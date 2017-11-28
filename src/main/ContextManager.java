@@ -2,10 +2,12 @@ package main;
 
 import repast.simphony.context.Context;
 import repast.simphony.context.space.gis.GeographyFactoryFinder;
+import repast.simphony.context.space.graph.NetworkBuilder;
 import repast.simphony.dataLoader.ContextBuilder;
 import repast.simphony.space.gis.Geography;
 import repast.simphony.space.gis.GeographyParameters;
 import repast.simphony.space.gis.SimpleAdder;
+import repast.simphony.space.graph.Network;
 import trafficInCity.Car;
 import trafficInCity.CarFactory;
 
@@ -18,8 +20,11 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
 import context.CarContext;
+import context.JunctionContext;
 import context.RoadContext;
 import environment.GISFunctions;
+import environment.Junction;
+import environment.NetworkEdgeCreator;
 import environment.Road;
 
 public class ContextManager  implements ContextBuilder <Object>{
@@ -31,6 +36,10 @@ public class ContextManager  implements ContextBuilder <Object>{
 	
 	public static Context<Car> carContext;
 	public static Geography<Car> carProjection;
+	
+	public static Context<Junction> junctionContext;
+	public static Geography<Junction> junctionProjection;
+	public static Network<Junction> streetNetwork;
 
 	static GeometryFactory GF = new GeometryFactory();
 	
@@ -55,6 +64,23 @@ public class ContextManager  implements ContextBuilder <Object>{
 			GISFunctions.readShapefile(Road.class, roadFile , roadProjection, roadContext);
 			
 			mainContext.addSubContext(roadContext);
+			
+			//Junctions
+			junctionContext = new JunctionContext();
+			junctionProjection = GeographyFactoryFinder
+					.createGeographyFactory(null)
+					.createGeography("junctionGeography", junctionContext, new GeographyParameters<Junction>(new SimpleAdder<Junction>()));
+			
+			mainContext.addSubContext(junctionContext);
+			
+			// create network 
+			NetworkBuilder<Junction> builder = new NetworkBuilder<Junction>("streetNetwork",junctionContext,false);
+			builder.setEdgeCreator(new NetworkEdgeCreator<Junction>());
+			
+			streetNetwork = builder.buildNetwork();
+			
+			GISFunctions.buildGISRoadNetwork(roadProjection, junctionContext, junctionProjection, streetNetwork);
+			
 			
 			//Car Agents
 			carContext = new CarContext();
