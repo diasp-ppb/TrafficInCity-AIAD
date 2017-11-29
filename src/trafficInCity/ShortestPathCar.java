@@ -20,23 +20,32 @@ import repast.simphony.space.gis.Geography;
 public class ShortestPathCar extends Car {
 	
 	private int i;
-	private List<Junction> route;
+	private List<Coordinate> route;
 
 	public ShortestPathCar (Geography<? extends Car> space, Point finalPos) {
 		super(space, finalPos);
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
 		i = 0;
-		route = new ArrayList<Junction>();
+		route = new ArrayList<Coordinate>();
 		System.out.println("Final: " + f);
 	}
 	
 	@ScheduledMethod (start = 1 , interval = 1)
 	public void move() {
 		if(i < route.size()) {
-			ContextManager.moveAgent(this, ContextManager.junctionProjection.getGeometry(route.get(i)).getCentroid());
-			i++;
-			Coordinate a = new Coordinate(actualPos().getX(), actualPos().getY());
-			System.out.println(a);
+			double lon = (route.get(i).y - actualPos().getY());
+			double dx = Math.cos(actualPos().getX()) * Math.sin(route.get(i).x) - Math.sin(actualPos().getX()) * Math.cos(route.get(i).x) * Math.cos(lon);
+			double dy = Math.sin(lon) * Math.cos(route.get(i).y);
+			double ang = Math.atan2(dy, dx);
+			
+			ang = ((Math.PI * 2) + ang) % (Math.PI * 2);
+			ang = (Math.PI * 2) - ang;
+			
+			System.out.println(ang);
+			ContextManager.moveAgentByVector(this, 0.0001, ang);
+			
+			if(((int)(ang * 10000)) == 31415 || ((int)(ang * 10000)) == 62831 || ((int)(ang * 10000)) == 15707 || ((int)(ang * 10000)) == 47123)
+				i++;
 		}
 	}
 	
@@ -103,15 +112,40 @@ public class ShortestPathCar extends Car {
 						stack.pop();
 					}
 					
+					List<Junction> juncts = new ArrayList<Junction>();
 					while(!temp.isEmpty()) {
-						route.add(temp.peek());
+						juncts.add(temp.peek());
 						temp.pop();
 					}
 					
+					defineRoute(juncts);
 					return;
 				}
 			} else {
 				stack.pop();
+			}
+		}
+	}
+	
+	public void defineRoute(List<Junction> junctions) {
+		for(int i = 1; i < junctions.size(); i++) {
+			Iterator<Road> roads = ContextManager.roadContext.getObjects(Road.class).iterator();
+			Road r = null;
+			while(roads.hasNext()) {
+				r = roads.next();
+				if (r.getJunctions().contains(junctions.get(i-1)) && r.getJunctions().contains(junctions.get(i))) {
+					break;
+				}
+			}
+			Coordinate[] coords = ContextManager.roadProjection.getGeometry(r).getCoordinates();
+			if(coords[0].equals(junctions.get(i-1).getCoords())) {
+				for (int j = 0; j < coords.length; j++) {
+					route.add(coords[j]);
+				}
+			} else {
+				for (int j = coords.length-1; j >= 0; j--) {
+					route.add(coords[j]);
+				}
 			}
 		}
 	}

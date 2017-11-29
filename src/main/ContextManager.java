@@ -43,7 +43,7 @@ public class ContextManager  implements ContextBuilder <Object>{
 	public static Geography<Junction> junctionProjection;
 	public static Network<Junction> streetNetwork;
 
-	static GeometryFactory GF = new GeometryFactory();
+	public static GeometryFactory GF = new GeometryFactory();
 	
 	public String mapLocation = "./data/gis_data/toy_city/";
 	
@@ -109,6 +109,11 @@ public class ContextManager  implements ContextBuilder <Object>{
 	
 	public static synchronized void moveAgent(Car car, Point point ) {
 		ContextManager.carProjection.move(car, point);
+		//System.out.println(ContextManager.carProjection.getGeometry(car).equals(point));
+	}
+	
+	public static synchronized void moveAgentByVector(Car car, double dist, double ang) {
+		ContextManager.carProjection.moveByVector(car, dist, ang);
 		//System.out.println(ContextManager.carProjection.getGeometry(car).equals(point));
 	}
 	
