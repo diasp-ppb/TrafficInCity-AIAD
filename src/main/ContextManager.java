@@ -13,7 +13,9 @@ import trafficInCity.CarFactory;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -107,21 +109,36 @@ public class ContextManager  implements ContextBuilder <Object>{
 	
 	public static synchronized void moveAgent(Car car, Point point ) {
 		ContextManager.carProjection.move(car, point);
-		System.out.println(ContextManager.carProjection.getGeometry(car).equals(point));
+		//System.out.println(ContextManager.carProjection.getGeometry(car).equals(point));
 	}
 	
-	public static synchronized void moveAgentInStreet(Car car) {
-		Iterator<Road> roads = ContextManager.roadContext.getRandomObjects(Road.class, 10).iterator();
-		Point finalPoint = car.getFinalPos();
-		Point nextPos = car.actualPos();
-		if(!ContextManager.carProjection.getGeometry(car).equals(finalPoint)) {
-			while(roads.hasNext()) {
-				if(roads.hasNext()) {
-					nextPos = ContextManager.roadProjection.getGeometry(roads.next()).getCentroid();
-				}
-			}
-			ContextManager.carProjection.move(car, nextPos);
-			System.out.println(nextPos);
+	public static Junction getJunction(Coordinate coord) {
+		
+		Iterator<Junction> junctions = streetNetwork.getNodes().iterator();
+		
+		while(junctions.hasNext()) {
+			Junction j = junctions.next();
+			if(j.getCoords().equals(coord))
+				return j;
 		}
+		return null;
 	}
+	
+//	public static synchronized List<Junction> getShortestPath(Point initialPoint, Point finalPoint){
+//		
+//		Junction initialJ = getJunction(new Coordinate(initialPoint.getX(), initialPoint.getY()));
+//		Junction finalJ = getJunction(new Coordinate(finalPoint.getX(), finalPoint.getY()));
+//		
+//		final int size = streetNetwork.size();
+//		
+//		final List<Junction> closedSet = new ArrayList<Junction>(size);
+//		final List<Junction> openSet = new ArrayList<Junction>(size);
+//		
+//		openSet.add(initialJ);
+//		streetNetwork.
+//		
+//		final Map<>
+//		
+//		return null;
+//	}
 }
