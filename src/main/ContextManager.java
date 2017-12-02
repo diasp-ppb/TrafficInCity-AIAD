@@ -8,9 +8,9 @@ import repast.simphony.space.gis.Geography;
 import repast.simphony.space.gis.GeographyParameters;
 import repast.simphony.space.gis.SimpleAdder;
 import repast.simphony.space.graph.Network;
+import repast.simphony.space.graph.RepastEdge;
 import trafficInCity.Car;
 import trafficInCity.CarFactory;
-import trafficInCity.JunctionsFactory;
 import trafficInCity.Semaphore;
 import trafficInCity.SemaphoreFactory;
 
@@ -117,8 +117,7 @@ public class ContextManager  implements ContextBuilder <Object>{
 			semaphoreFactory.createAgents(semaphoreContext, semaphoreProjection);
 			
 			//JunctionsCars
-			JunctionsFactory edgesCar = new JunctionsFactory();
-			edgesCar.createjunctionsCars();
+			this.createjunctionsCars();
 	   				
 
 			} catch (MalformedURLException | FileNotFoundException e) {
@@ -153,6 +152,41 @@ public class ContextManager  implements ContextBuilder <Object>{
 				return j;
 		}
 		return null;
+	}
+	
+	
+	public void createjunctionsCars() {
+
+		Iterator<RepastEdge<Junction>> junctions = ContextManager.streetNetwork.getEdges().iterator();
+		
+		while(junctions.hasNext()) {
+			RepastEdge<Junction> junction = junctions.next();
+			
+			Junction source = junction.getSource();
+			Junction target = junction.getTarget();
+			
+			HashMap<Junction,Junction> pair= new HashMap <Junction,Junction>();
+			pair.put(source, target);
+			
+			ContextManager.JunctionCars.put(pair, 0);
+			
+			//System.out.println(junction.toString());
+			//System.out.println(pair.values());
+			
+			if(junctions.next().isDirected()) {
+				
+				HashMap<Junction,Junction> pair2 = new HashMap <Junction,Junction>();
+				pair2.put(target, source);
+				
+				ContextManager.JunctionCars.put(pair2, 0);
+				//System.out.println(pair2.values());
+			}	
+			//System.out.println();
+		}
+		//System.out.println();
+		//System.out.println();
+		//System.out.println(ContextManager.JunctionCars);
+		
 	}
 	
 //	public static synchronized List<Junction> getShortestPath(Point initialPoint, Point finalPoint){
