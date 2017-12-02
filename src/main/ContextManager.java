@@ -10,12 +10,14 @@ import repast.simphony.space.gis.SimpleAdder;
 import repast.simphony.space.graph.Network;
 import trafficInCity.Car;
 import trafficInCity.CarFactory;
+import trafficInCity.JunctionsFactory;
 import trafficInCity.Semaphore;
 import trafficInCity.SemaphoreFactory;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,6 +50,8 @@ public class ContextManager  implements ContextBuilder <Object>{
 	public static Context<Junction> junctionContext;
 	public static Geography<Junction> junctionProjection;
 	public static Network<Junction> streetNetwork;
+	
+	public static HashMap<HashMap<Junction,Junction>, Integer> JunctionCars = new HashMap<HashMap<Junction,Junction>, Integer>();
 
 	public static GeometryFactory GF = new GeometryFactory();
 	
@@ -111,7 +115,12 @@ public class ContextManager  implements ContextBuilder <Object>{
 			
 			SemaphoreFactory semaphoreFactory = new SemaphoreFactory();
 			semaphoreFactory.createAgents(semaphoreContext, semaphoreProjection);
-	   					
+			
+			//JunctionsCars
+			JunctionsFactory edgesCar = new JunctionsFactory();
+			edgesCar.createjunctionsCars();
+	   				
+
 			} catch (MalformedURLException | FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

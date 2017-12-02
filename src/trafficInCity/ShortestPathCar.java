@@ -28,7 +28,7 @@ public class ShortestPathCar extends Car {
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
 		i = 0;
 		route = new ArrayList<Coordinate>();
-		System.out.println("Final: " + f);
+		//System.out.println("Final: " + f);
 	}
 	
 	@ScheduledMethod (start = 1 , interval = 1)
@@ -42,8 +42,8 @@ public class ShortestPathCar extends Car {
 			ang = ((Math.PI * 2) + ang) % (Math.PI * 2);
 			ang = (Math.PI * 2) - ang;
 			
-			System.out.println(ang);
-			ContextManager.moveAgentByVector(this, 0.0001, ang);
+			//System.out.println(ang);
+			ContextManager.moveAgentByVector(this, 2, ang);
 			
 			if(((int)(ang * 10000)) == 31415 || ((int)(ang * 10000)) == 62831 || ((int)(ang * 10000)) == 15707 || ((int)(ang * 10000)) == 47123)
 				i++;
@@ -73,7 +73,7 @@ public class ShortestPathCar extends Car {
 			}
 		}
 		ContextManager.moveAgent(this, ContextManager.junctionProjection.getGeometry(ContextManager.streetNetwork.getRandomSuccessor(actJunction)).getCentroid());
-		System.out.println("Actual: " + i);
+		//System.out.println("Actual: " + i);
 	}
 	
 	public void runDFS() {

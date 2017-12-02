@@ -26,16 +26,20 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>2037811095</hashCode>
+    <hashCode>-544377022</hashCode>
   </schedParams>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>trafficInCity.Semaphore</string>
-      <int>1</int>
+      <string>.\data\gis_data\toy_city\roads.shp</string>
+      <int>3</int>
     </entry>
     <entry>
       <string>trafficInCity.ShortestPathCar</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>.\data\gis_data\toy_city\buildings.shp</string>
       <int>2</int>
     </entry>
     <entry>
@@ -62,7 +66,16 @@
   <props>
     <entry>
       <string>class repast.simphony.visualization.gis.DisplayGIS.SHP_FILE_STYLE_PROP</string>
-      <map/>
+      <map>
+        <entry>
+          <string>.\data\gis_data\toy_city\roads.shp</string>
+          <string>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;sld:UserStyle xmlns=&quot;http://www.opengis.net/sld&quot; xmlns:sld=&quot;http://www.opengis.net/sld&quot; xmlns:gml=&quot;http://www.opengis.net/gml&quot; xmlns:ogc=&quot;http://www.opengis.net/ogc&quot;&gt;&lt;sld:Name&gt;Default Styler&lt;/sld:Name&gt;&lt;sld:FeatureTypeStyle&gt;&lt;sld:Name&gt;name&lt;/sld:Name&gt;&lt;sld:Rule&gt;&lt;sld:LineSymbolizer&gt;&lt;sld:Stroke&gt;&lt;sld:CssParameter name=&quot;stroke&quot;&gt;#FF0000&lt;/sld:CssParameter&gt;&lt;/sld:Stroke&gt;&lt;/sld:LineSymbolizer&gt;&lt;/sld:Rule&gt;&lt;/sld:FeatureTypeStyle&gt;&lt;/sld:UserStyle&gt;</string>
+        </entry>
+        <entry>
+          <string>.\data\gis_data\toy_city\buildings.shp</string>
+          <string>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;sld:UserStyle xmlns=&quot;http://www.opengis.net/sld&quot; xmlns:sld=&quot;http://www.opengis.net/sld&quot; xmlns:gml=&quot;http://www.opengis.net/gml&quot; xmlns:ogc=&quot;http://www.opengis.net/ogc&quot;&gt;&lt;sld:Name&gt;Default Styler&lt;/sld:Name&gt;&lt;sld:FeatureTypeStyle&gt;&lt;sld:Name&gt;name&lt;/sld:Name&gt;&lt;sld:Rule&gt;&lt;sld:PolygonSymbolizer&gt;&lt;sld:Fill&gt;&lt;sld:CssParameter name=&quot;fill&quot;&gt;#00FF00&lt;/sld:CssParameter&gt;&lt;/sld:Fill&gt;&lt;sld:Stroke/&gt;&lt;/sld:PolygonSymbolizer&gt;&lt;/sld:Rule&gt;&lt;/sld:FeatureTypeStyle&gt;&lt;/sld:UserStyle&gt;</string>
+        </entry>
+      </map>
     </entry>
   </props>
   <renderQuality>MEDIUM</renderQuality>

@@ -22,9 +22,14 @@ public class Junction {
 		return id;
 	}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return "Junction "+this.id+": ("+this.coord.x+","+this.coord.y+")";
+	}*/
+	
+	@Override
+	public String toString() {
+		return "Junction "+this.id+"";
 	}
 	
 	
