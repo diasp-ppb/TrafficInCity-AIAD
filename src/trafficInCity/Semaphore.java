@@ -1,22 +1,26 @@
 package trafficInCity;
 
 import sajas.core.Agent;
+
+import com.vividsolutions.jts.geom.Point;
+
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
-import repast.simphony.space.continuous.ContinuousSpace;
+import repast.simphony.space.gis.Geography;
 
 public class Semaphore extends Agent{
-	protected ContinuousSpace<Object> space;
+	protected Geography<Semaphore> space;
 	protected boolean isGreen;
-	protected int tickChange;
-	
+	protected int tickChange;	
 	protected int actualTick;
+	protected Point pos;
 	
-	public Semaphore(ContinuousSpace<Object> space, boolean isGreen, int tickChange) {
+	public Semaphore(Geography<Semaphore> space, Point pos,  boolean isGreen, int tickChange) {
 		this.space = space;
 		this.isGreen = isGreen;
 		this.tickChange = tickChange;
 		this.actualTick = 0;
+		this.pos= pos;
 	}
 	
 	@Override

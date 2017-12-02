@@ -6,9 +6,13 @@
 		<projection type="geography" id="carGeography"></projection>
 	</context>
 	
+	 <context id="SemaphoreContext">
+		<projection type="geography" id="semaphoreGeography"></projection>
+	</context>
+	
 	
   	<context id="RoadContext">
-		<projection type="geography" id="RoadGeography"></projection>
+		<projection type="geography" id="roadGeography"></projection>
 	</context>
 	
 

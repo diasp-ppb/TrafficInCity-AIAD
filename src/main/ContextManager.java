@@ -10,6 +10,8 @@ import repast.simphony.space.gis.SimpleAdder;
 import repast.simphony.space.graph.Network;
 import trafficInCity.Car;
 import trafficInCity.CarFactory;
+import trafficInCity.Semaphore;
+import trafficInCity.SemaphoreFactory;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
@@ -24,6 +26,7 @@ import com.vividsolutions.jts.geom.Point;
 import context.CarContext;
 import context.JunctionContext;
 import context.RoadContext;
+import context.SemaphoreContext;
 import environment.GISFunctions;
 import environment.Junction;
 import environment.NetworkEdgeCreator;
@@ -38,6 +41,9 @@ public class ContextManager  implements ContextBuilder <Object>{
 	
 	public static Context<Car> carContext;
 	public static Geography<Car> carProjection;
+	
+	public static Context<Semaphore> semaphoreContext;
+	public static Geography<Semaphore> semaphoreProjection;
 	
 	public static Context<Junction> junctionContext;
 	public static Geography<Junction> junctionProjection;
@@ -94,6 +100,17 @@ public class ContextManager  implements ContextBuilder <Object>{
 			
 			CarFactory carFactory = new CarFactory();
 			carFactory.createAgents(carContext, carProjection);
+			
+			//Semaphore
+			semaphoreContext = new SemaphoreContext();
+			mainContext.addSubContext(semaphoreContext);
+			semaphoreProjection = GeographyFactoryFinder
+	   				.createGeographyFactory(null)
+	   				.createGeography("semaphoreGeography", semaphoreContext, new GeographyParameters<Semaphore>(new SimpleAdder<Semaphore>()));
+	   		
+			
+			SemaphoreFactory semaphoreFactory = new SemaphoreFactory();
+			semaphoreFactory.createAgents(semaphoreContext, semaphoreProjection);
 	   					
 			} catch (MalformedURLException | FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -146,4 +163,8 @@ public class ContextManager  implements ContextBuilder <Object>{
 //		
 //		return null;
 //	}
+	
+	public static synchronized void addSemaphoreToContext(Semaphore semaphore) {
+		ContextManager.semaphoreContext.add(semaphore);
+	}
 }
