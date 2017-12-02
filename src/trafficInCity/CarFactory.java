@@ -24,7 +24,7 @@ public class CarFactory {
 				ContextManager.addCarToContext(car);
 				Junction nextRoad = junction.next();
 				ContextManager.moveAgent(car, ContextManager.junctionProjection.getGeometry(nextRoad).getCentroid());
-				car.runDFS();
+				car.runBFS();
 				i++;
 			}
 		}

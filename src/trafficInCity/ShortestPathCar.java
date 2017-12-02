@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -125,6 +126,67 @@ public class ShortestPathCar extends Car {
 				stack.pop();
 			}
 		}
+	}
+	
+	public void runBFS() {
+		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
+		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
+		
+		if (i.equals(f))
+			return;
+		
+		Junction actJunction = ContextManager.getJunction(i);
+		Junction finalJunction = ContextManager.getJunction(f);
+		
+		Queue<Junction> queue = new LinkedList<Junction>();
+		List<Junction> visited = new ArrayList<Junction>();
+		Stack<Junction> pathStack = new Stack<Junction>();
+		ArrayList<Junction> shortestPathList = new ArrayList<Junction>();
+
+		queue.add(actJunction);
+		visited.add(actJunction);
+		pathStack.add(actJunction);
+		
+		while(! queue.isEmpty()) {
+			Junction j = queue.poll();
+			Iterator<Junction> successors = ContextManager.streetNetwork.getSuccessors(j).iterator();
+			
+			while(successors.hasNext()) {
+				Junction n = successors.next();
+				
+				if(!visited.contains(n)) {
+					queue.add(n);
+					visited.add(n);
+					pathStack.add(n);
+					if(j.equals(finalJunction))
+						break;
+				}
+			}
+		}
+		Junction node, currSrc = finalJunction;
+		shortestPathList.add(finalJunction);
+		
+		while(!pathStack.isEmpty()) {
+			node = pathStack.pop();
+			Iterator<Junction> succ = ContextManager.streetNetwork.getSuccessors(currSrc).iterator();
+			Boolean fin = false;
+			
+			while(succ.hasNext()) {
+				Junction ao = succ.next();
+				
+				if(ao.equals(node)) {
+					shortestPathList.add(0, node);
+					currSrc = node;
+					if(node.equals(actJunction)) {
+						fin = true;
+					}
+					break;
+				}
+			}
+			if(fin)
+				break;
+		}
+		defineRoute(shortestPathList);
 	}
 	
 	public void defineRoute(List<Junction> junctions) {
