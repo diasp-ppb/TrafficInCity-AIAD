@@ -215,4 +215,9 @@ public class ContextManager  implements ContextBuilder <Object>{
 	public static synchronized void addSemaphoreToContext(Semaphore semaphore) {
 		ContextManager.semaphoreContext.add(semaphore);
 	}
+	
+	public static synchronized void moveSemaphoreToPlace(Semaphore sem, Point point ) {
+		ContextManager.semaphoreProjection.move(sem, point);
+		//System.out.println(ContextManager.carProjection.getGeometry(car).equals(point));
+	}
 }
