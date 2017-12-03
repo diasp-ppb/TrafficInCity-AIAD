@@ -33,6 +33,7 @@ import environment.GISFunctions;
 import environment.Junction;
 import environment.NetworkEdgeCreator;
 import environment.Road;
+import javafx.util.Pair;
 
 public class ContextManager  implements ContextBuilder <Object>{
 
@@ -51,7 +52,7 @@ public class ContextManager  implements ContextBuilder <Object>{
 	public static Geography<Junction> junctionProjection;
 	public static Network<Junction> streetNetwork;
 	
-	public static HashMap<HashMap<Junction,Junction>, Integer> JunctionCars = new HashMap<HashMap<Junction,Junction>, Integer>();
+	public static HashMap<Pair<Junction,Junction>, Integer> JunctionCars = new HashMap<Pair<Junction,Junction>, Integer>();
 
 	public static GeometryFactory GF = new GeometryFactory();
 	
@@ -93,6 +94,8 @@ public class ContextManager  implements ContextBuilder <Object>{
 			
 			GISFunctions.buildGISRoadNetwork(roadProjection, junctionContext, junctionProjection, streetNetwork);
 			
+			//JunctionsCars
+			this.createjunctionsCars();
 			
 			//Car Agents
 			carContext = new CarContext();
@@ -116,8 +119,7 @@ public class ContextManager  implements ContextBuilder <Object>{
 			SemaphoreFactory semaphoreFactory = new SemaphoreFactory();
 			semaphoreFactory.createAgents(semaphoreContext, semaphoreProjection);
 			
-			//JunctionsCars
-			this.createjunctionsCars();
+
 	   				
 
 			} catch (MalformedURLException | FileNotFoundException e) {
@@ -154,6 +156,19 @@ public class ContextManager  implements ContextBuilder <Object>{
 		return null;
 	}
 	
+	public static synchronized void addIndexjunctionsCars(Pair<Junction,Junction> road) {
+		
+		//System.out.println("antes" + JunctionCars.get(road));		
+		JunctionCars.merge(road, 1, Integer::sum);		
+		//System.out.println("depois" + JunctionCars.get(road));
+	}
+	
+	public static synchronized void subIndexjunctionsCars(Pair<Junction,Junction> road) {
+		
+		//System.out.println("antes sub" + JunctionCars.get(road));		
+		JunctionCars.merge(road, -1, Integer::sum);		
+		//System.out.println("depois sub" + JunctionCars.get(road));
+	}
 	
 	public void createjunctionsCars() {
 
@@ -164,23 +179,13 @@ public class ContextManager  implements ContextBuilder <Object>{
 			
 			Junction source = junction.getSource();
 			Junction target = junction.getTarget();
-			
-			HashMap<Junction,Junction> pair= new HashMap <Junction,Junction>();
-			pair.put(source, target);
-			
-			ContextManager.JunctionCars.put(pair, 0);
+						
+			ContextManager.JunctionCars.put(new Pair<Junction, Junction>(source, target), 0);
+			ContextManager.JunctionCars.put(new Pair<Junction, Junction>(target, source), 0);
 			
 			//System.out.println(junction.toString());
 			//System.out.println(pair.values());
 			
-			if(junctions.next().isDirected()) {
-				
-				HashMap<Junction,Junction> pair2 = new HashMap <Junction,Junction>();
-				pair2.put(target, source);
-				
-				ContextManager.JunctionCars.put(pair2, 0);
-				//System.out.println(pair2.values());
-			}	
 			//System.out.println();
 		}
 		//System.out.println();

@@ -3,40 +3,55 @@ package trafficInCity;
 import main.ContextManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.Vector;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
 
 import environment.Junction;
 import environment.Road;
+import javafx.util.Pair;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.gis.Geography;
 
 
 public class ShortestPathCar extends Car {
 	
-	private int i;
-	private List<Coordinate> route;
+	private int atualIndexInJunction;
+	private int atualIndex;
+	private List<Pair<Junction, Vector<Coordinate>>> route;
 
 	public ShortestPathCar (Geography<? extends Car> space, Point finalPos) {
 		super(space, finalPos);
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
-		i = 0;
-		route = new ArrayList<Coordinate>();
+		atualIndexInJunction = 0;
+		atualIndex = 0;
+		route = new ArrayList<Pair<Junction, Vector<Coordinate>>>();
 		//System.out.println("Final: " + f);
 	}
 	
 	@ScheduledMethod (start = 1 , interval = 1)
 	public void move() {
-		if(i < route.size()) {
-			double lon = (route.get(i).y - actualPos().getY());
-			double dx = Math.cos(actualPos().getX()) * Math.sin(route.get(i).x) - Math.sin(actualPos().getX()) * Math.cos(route.get(i).x) * Math.cos(lon);
-			double dy = Math.sin(lon) * Math.cos(route.get(i).y);
+		
+		if(atualIndex < route.size()-1) {
+			
+			Vector<Coordinate> coordsJuntion = route.get(atualIndex).getValue();	
+			
+			if(atualIndexInJunction < coordsJuntion.size()) {
+				
+				Coordinate point = coordsJuntion.get(atualIndexInJunction);
+			
+			
+			double lon = (point.y - actualPos().getY());
+			double dx = Math.cos(actualPos().getX()) * Math.sin(point.x) - Math.sin(actualPos().getX()) * Math.cos(point.x) * Math.cos(lon);
+			double dy = Math.sin(lon) * Math.cos(point.y);
 			double ang = Math.atan2(dy, dx);
 			
 			ang = ((Math.PI * 2) + ang) % (Math.PI * 2);
@@ -45,35 +60,61 @@ public class ShortestPathCar extends Car {
 			//System.out.println(ang);
 			ContextManager.moveAgentByVector(this, 2, ang);
 			
-			if(((int)(ang * 10000)) == 31415 || ((int)(ang * 10000)) == 62831 || ((int)(ang * 10000)) == 15707 || ((int)(ang * 10000)) == 47123)
-				i++;
+			if(((int)(ang * 10000)) == 31415 || ((int)(ang * 10000)) == 62831 || ((int)(ang * 10000)) == 15707 || ((int)(ang * 10000)) == 47123) {
+				atualIndex++;
+				atualIndexInJunction = 0;
+				Junction newsourceJunction = route.get(atualIndex).getKey();
+				Junction newtargetJunction =  route.get(atualIndex + 1).getKey();
+				ContextManager.addIndexjunctionsCars(new Pair<Junction,Junction>(newsourceJunction, newtargetJunction ));
+				
+				
+				if(atualIndex > 0) {
+					Junction oldsourceJunction = route.get(atualIndex - 1).getKey(); 
+					Junction oldtargetJunction = newsourceJunction;
+					
+					ContextManager.subIndexjunctionsCars(new Pair<Junction,Junction>(oldsourceJunction, oldtargetJunction ));
+					
+				}
+			}
+		}
 		}
 	}
 	
 	public void moveAgentInStreet() {
 		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
+		System.out.println("Actual: " + i);
+		System.out.println("Final: " + f);
 		
-		if (i.equals(f))
+		
+		
+		if (i.equals(f)) {
 			return;
+		}
 		
 		Junction actJunction = ContextManager.getJunction(i);
-		Junction finalJunction = ContextManager.getJunction(f);
+		//Junction finalJunction = ContextManager.getJunction(f);
 		
 		Iterator<Junction> successors = ContextManager.streetNetwork.getSuccessors(actJunction).iterator();
 		
-		if(!successors.hasNext())
+		if(!successors.hasNext()) {
+			System.out.println("Exit");
 			return;
+		}
 			 
 		while(successors.hasNext()) {
 			Junction j = successors.next();
 			if(j.getCoords().equals(f)) {
 				ContextManager.moveAgent(this, ContextManager.junctionProjection.getGeometry(j).getCentroid());
+				System.out.println("Final---: " + this.actualPos());
 				return;
 			}
+		
+		ContextManager.moveAgent(this, ContextManager.junctionProjection.getGeometry(j).getCentroid());
+		System.out.println("Actual: " + this.actualPos());
 		}
-		ContextManager.moveAgent(this, ContextManager.junctionProjection.getGeometry(ContextManager.streetNetwork.getRandomSuccessor(actJunction)).getCentroid());
-		//System.out.println("Actual: " + i);
+		
+		System.out.println("fim do ciclo");
 	}
 	
 	public void runDFS() {
@@ -190,25 +231,33 @@ public class ShortestPathCar extends Car {
 	}
 	
 	public void defineRoute(List<Junction> junctions) {
+	
+		
 		for(int i = 1; i < junctions.size(); i++) {
+			Vector<Coordinate> coordsRoad = new Vector<Coordinate>();
 			Iterator<Road> roads = ContextManager.roadContext.getObjects(Road.class).iterator();
 			Road r = null;
+			Junction sourceJunction = junctions.get(i-1);
+			Junction targetJunction = junctions.get(i);
+			
 			while(roads.hasNext()) {
 				r = roads.next();
-				if (r.getJunctions().contains(junctions.get(i-1)) && r.getJunctions().contains(junctions.get(i))) {
+				if (r.getJunctions().contains(sourceJunction) && r.getJunctions().contains(targetJunction)) {
 					break;
 				}
 			}
 			Coordinate[] coords = ContextManager.roadProjection.getGeometry(r).getCoordinates();
 			if(coords[0].equals(junctions.get(i-1).getCoords())) {
 				for (int j = 0; j < coords.length; j++) {
-					route.add(coords[j]);
+					coordsRoad.addElement(coords[j]);
 				}
 			} else {
 				for (int j = coords.length-1; j >= 0; j--) {
-					route.add(coords[j]);
+					coordsRoad.addElement(coords[j]);
 				}
 			}
+			route.add(new Pair<Junction, Vector<Coordinate>>(sourceJunction, coordsRoad));
 		}
+		route.add(new Pair<Junction, Vector<Coordinate>>(junctions.get(junctions.size()-1), new Vector<Coordinate>() ));
 	}
 }
