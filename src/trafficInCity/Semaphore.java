@@ -9,13 +9,13 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.gis.Geography;
 
 public class Semaphore extends Agent{
-	protected Geography<Semaphore> space;
+	protected Geography<? extends Semaphore> space;
 	protected boolean isGreen;
 	protected int tickChange;	
 	protected int actualTick;
 	protected Point pos;
 	
-	public Semaphore(Geography<Semaphore> space, Point pos,  boolean isGreen, int tickChange) {
+	public Semaphore(Geography<? extends Semaphore> space, Point pos,  boolean isGreen, int tickChange) {
 		this.space = space;
 		this.isGreen = isGreen;
 		this.tickChange = tickChange;
@@ -23,15 +23,18 @@ public class Semaphore extends Agent{
 		this.pos= pos;
 	}
 	
+	/*
 	@Override
 	public void setup() {
 		System.out.println("Oi, sou o semáforo");
 	}
-	
+	*/
 	public boolean isSemaphoreGreen() {
 		return isGreen;
 	}
 	
+	
+	/*
 	@ScheduledMethod(start = 1, interval = 1)
 	public void verifySemaphoreColor() {
 		if (actualTick < tickChange)
@@ -42,5 +45,5 @@ public class Semaphore extends Agent{
 		}
 		
 		RunEnvironment.getInstance().setScheduleTickDelay(20);
-	}
+	}*/
 }
