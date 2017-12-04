@@ -61,7 +61,6 @@ public class ShortestPathCar extends Car {
 			
 			if(((int)(ang * 10000)) == 31415 || ((int)(ang * 10000)) == 62831 || ((int)(ang * 10000)) == 15707 || ((int)(ang * 10000)) == 47123) {
 				
-				atualIndexInJunction = 0;
 				Junction newsourceJunction = route.get(atualIndex).getKey();
 				Junction newtargetJunction =  route.get(atualIndex + 1).getKey();
 				ContextManager.addIndexjunctionsCars(new Pair<Junction,Junction>(newsourceJunction, newtargetJunction ));
@@ -74,7 +73,12 @@ public class ShortestPathCar extends Car {
 					
 				}
 				
-				atualIndex++;
+				if(route.get(atualIndex).getValue().size() == atualIndexInJunction+1) {
+					atualIndex++;
+					atualIndexInJunction = 0;
+				}
+				else
+					atualIndexInJunction++;
 				
 			}
 		}
