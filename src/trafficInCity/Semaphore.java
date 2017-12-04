@@ -34,7 +34,7 @@ public class Semaphore extends Agent{
 	}
 	
 	
-	/*
+	
 	@ScheduledMethod(start = 1, interval = 1)
 	public void verifySemaphoreColor() {
 		if (actualTick < tickChange)
@@ -43,7 +43,6 @@ public class Semaphore extends Agent{
 			actualTick = 0;
 			isGreen = !isGreen;
 		}
-		
 		RunEnvironment.getInstance().setScheduleTickDelay(20);
-	}*/
+	}
 }
