@@ -8,7 +8,6 @@ import repast.simphony.space.gis.Geography;
 import repast.simphony.space.gis.GeographyParameters;
 import repast.simphony.space.gis.SimpleAdder;
 import repast.simphony.space.graph.Network;
-import repast.simphony.space.graph.RepastEdge;
 import trafficInCity.Car;
 import trafficInCity.CarFactory;
 import trafficInCity.Semaphore;
@@ -16,10 +15,7 @@ import trafficInCity.SemaphoreFactory;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -33,7 +29,6 @@ import environment.GISFunctions;
 import environment.Junction;
 import environment.NetworkEdgeCreator;
 import environment.Road;
-import javafx.util.Pair;
 
 public class ContextManager  implements ContextBuilder <Object>{
 
@@ -52,81 +47,93 @@ public class ContextManager  implements ContextBuilder <Object>{
 	public static Geography<Junction> junctionProjection;
 	public static Network<Junction> streetNetwork;
 	
-	public static HashMap<Pair<Junction,Junction>, Integer> carsInRoad = new HashMap<Pair<Junction,Junction>, Integer>();
-
+	public static RoadTrafficIntensity carsInRoad;
+	
 	public static GeometryFactory GF = new GeometryFactory();
 	
 	public String mapLocation = "./data/gis_data/toy_city/";
 	
+
+	
 	@Override
-	public Context build(Context<Object> con) {
+	public Context<Object> build(Context<Object> con) {
 		
 		mainContext = con;
 		mainContext.setId("mainContext");
 		
 			
 		try {
-			//Roads
-	   		roadContext = new RoadContext();
-	   		roadProjection = GeographyFactoryFinder
-	   				.createGeographyFactory(null)
-	   				.createGeography("roadGeography", roadContext, new GeographyParameters<Road>(new SimpleAdder<Road>()));
-	   		
-	   		String roadFile = mapLocation + "roads.shp"; 
-	   		
-			GISFunctions.readShapefile(Road.class, roadFile , roadProjection, roadContext);
-			
-			mainContext.addSubContext(roadContext);
-			
-			//Junctions
-			junctionContext = new JunctionContext();
-			junctionProjection = GeographyFactoryFinder
-					.createGeographyFactory(null)
-					.createGeography("junctionGeography", junctionContext, new GeographyParameters<Junction>(new SimpleAdder<Junction>()));
-			
-			mainContext.addSubContext(junctionContext);
-			
-			// create network 
-			NetworkBuilder<Junction> builder = new NetworkBuilder<Junction>("streetNetwork",junctionContext,false);
-			builder.setEdgeCreator(new NetworkEdgeCreator<Junction>());
-			
-			streetNetwork = builder.buildNetwork();
-			
-			GISFunctions.buildGISRoadNetwork(roadProjection, junctionContext, junctionProjection, streetNetwork);
+			createRoads();
+			//create Road intersections
+			createJunctions();
+			createNetWork();
 			
 			// storage  info for traffic intensity in network
-			this.createCarsInRoad();
+			carsInRoad = new RoadTrafficIntensity();
 			
-			//Car Agents
-			carContext = new CarContext();
-			mainContext.addSubContext(carContext);
-			carProjection = GeographyFactoryFinder
-	   				.createGeographyFactory(null)
-	   				.createGeography("carGeography", carContext, new GeographyParameters<Car>(new SimpleAdder<Car>()));
-	   		
-			
-			CarFactory carFactory = new CarFactory();
-			carFactory.createAgents(carContext, carProjection);
-			
-			//Semaphore
-			semaphoreContext = new SemaphoreContext();
-			mainContext.addSubContext(semaphoreContext);
-			semaphoreProjection = GeographyFactoryFinder
-	   				.createGeographyFactory(null)
-	   				.createGeography("semaphoreGeography", semaphoreContext, new GeographyParameters<Semaphore>(new SimpleAdder<Semaphore>()));
-	   		
-			
-			SemaphoreFactory semaphoreFactory = new SemaphoreFactory();
-			semaphoreFactory.createAgents(semaphoreContext, semaphoreProjection);
-			
-
-	   				
+			createCarContext();
+			createSemaphoreContext();	   				
 
 			} catch (MalformedURLException | FileNotFoundException e) {
 				e.printStackTrace();
 			}
 		
 		return mainContext;
+	}
+	
+	private void createRoads() throws MalformedURLException, FileNotFoundException {
+		roadContext = new RoadContext();
+   		roadProjection = GeographyFactoryFinder
+   				.createGeographyFactory(null)
+   				.createGeography("roadGeography", roadContext, new GeographyParameters<Road>(new SimpleAdder<Road>()));
+   		
+   		String roadFile = mapLocation + "roads.shp"; 
+   		
+		GISFunctions.readShapefile(Road.class, roadFile , roadProjection, roadContext);
+		
+		mainContext.addSubContext(roadContext);
+	}
+	
+	private void createJunctions() {
+		junctionContext = new JunctionContext();
+		junctionProjection = GeographyFactoryFinder
+				.createGeographyFactory(null)
+				.createGeography("junctionGeography", junctionContext, new GeographyParameters<Junction>(new SimpleAdder<Junction>()));
+		
+		mainContext.addSubContext(junctionContext);
+	}
+	
+	private void createNetWork() {
+		NetworkBuilder<Junction> builder = new NetworkBuilder<Junction>("streetNetwork",junctionContext,false);
+		builder.setEdgeCreator(new NetworkEdgeCreator<Junction>());
+		
+		streetNetwork = builder.buildNetwork();
+		
+		GISFunctions.buildGISRoadNetwork(roadProjection, junctionContext, junctionProjection, streetNetwork);
+	}
+	
+	private void createCarContext() {
+		carContext = new CarContext();
+		mainContext.addSubContext(carContext);
+		carProjection = GeographyFactoryFinder
+   				.createGeographyFactory(null)
+   				.createGeography("carGeography", carContext, new GeographyParameters<Car>(new SimpleAdder<Car>()));
+   		
+		
+		CarFactory carFactory = new CarFactory();
+		carFactory.createAgents(carContext, carProjection);
+	}
+	
+	private void createSemaphoreContext() {
+		semaphoreContext = new SemaphoreContext();
+		mainContext.addSubContext(semaphoreContext);
+		semaphoreProjection = GeographyFactoryFinder
+   				.createGeographyFactory(null)
+   				.createGeography("semaphoreGeography", semaphoreContext, new GeographyParameters<Semaphore>(new SimpleAdder<Semaphore>()));
+   		
+		
+		SemaphoreFactory semaphoreFactory = new SemaphoreFactory();
+		semaphoreFactory.createAgents(semaphoreContext, semaphoreProjection);
 	}
 	
 	public static synchronized void addCarToContext(Car car) {
@@ -151,29 +158,6 @@ public class ContextManager  implements ContextBuilder <Object>{
 				return j;
 		}
 		return null;
-	}
-	
-	public static synchronized void addIndexjunctionsCars(Pair<Junction,Junction> road) {	
-		carsInRoad.merge(road, 1, Integer::sum);		
-	}
-	
-	public static synchronized void subIndexjunctionsCars(Pair<Junction,Junction> road) {
-		carsInRoad.merge(road, -1, Integer::sum);		
-	}
-	
-	public void createCarsInRoad() {
-
-		Iterator<RepastEdge<Junction>> junctions = ContextManager.streetNetwork.getEdges().iterator();
-		
-		while(junctions.hasNext()) {
-			RepastEdge<Junction> junction = junctions.next();
-			
-			Junction source = junction.getSource();
-			Junction target = junction.getTarget();
-						
-			ContextManager.carsInRoad.put(new Pair<Junction, Junction>(source, target), 0);
-			ContextManager.carsInRoad.put(new Pair<Junction, Junction>(target, source), 0);
-		}	
 	}
 	
 	public static synchronized void addSemaphoreToContext(Semaphore semaphore) {

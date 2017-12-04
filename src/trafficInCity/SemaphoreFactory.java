@@ -6,7 +6,6 @@ import main.ContextManager;
 
 import repast.simphony.context.Context;
 import repast.simphony.space.gis.Geography;
-import sajas.core.Agent;
 
 public class SemaphoreFactory {
 

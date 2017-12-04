@@ -59,17 +59,20 @@ public class ShortestPathCar extends Car {
 			//System.out.println(ang);
 			ContextManager.moveAgentByVector(this, 0.0002, ang);
 			
-			if(((int)(ang * 10000)) == (int)(Math.PI * 10000) || ((int)(ang * 10000)) == (int)(2 * Math.PI * 10000) || ((int)(ang * 10000)) == (int)(Math.PI/2 * 10000) || ((int)(ang * 10000)) == (int)(3*Math.PI/2 * 10000)) {
+			int angl = (int) (ang * 10000);
+			int pi = (int) (Math.PI *10000);
+			
+			if((angl == pi) || angl == 2*pi || angl == (int)(pi/2) || angl== (int)(3*pi/2)) {
 				
 				Junction newsourceJunction = route.get(atualIndex).getKey();
 				Junction newtargetJunction =  route.get(atualIndex + 1).getKey();
-				ContextManager.addIndexjunctionsCars(new Pair<Junction,Junction>(newsourceJunction, newtargetJunction ));
+				ContextManager.carsInRoad.addIndexjunctionsCars(new Pair<Junction,Junction>(newsourceJunction, newtargetJunction ));
 				
 				if(atualIndex > 0) {
 					Junction oldsourceJunction = route.get(atualIndex - 1).getKey(); 
 					Junction oldtargetJunction = newsourceJunction;
 					
-					ContextManager.subIndexjunctionsCars(new Pair<Junction,Junction>(oldsourceJunction, oldtargetJunction ));
+					ContextManager.carsInRoad.subIndexjunctionsCars(new Pair<Junction,Junction>(oldsourceJunction, oldtargetJunction ));
 					
 				}
 				
@@ -234,6 +237,21 @@ public class ShortestPathCar extends Car {
 				break;
 		}
 		defineRoute(shortestPathList);
+	}
+	
+	public void runDiskj() {
+		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
+		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
+		
+		if (i.equals(f))
+			return;
+		
+		Junction actJunction = ContextManager.getJunction(i);
+		Junction finalJunction = ContextManager.getJunction(f);
+		
+		
+		
+		
 	}
 	
 	public void defineRoute(List<Junction> junctions) {
