@@ -57,9 +57,9 @@ public class ShortestPathCar extends Car {
 			ang = (Math.PI * 2) - ang;
 			
 			//System.out.println(ang);
-			ContextManager.moveAgentByVector(this, 0.0001, ang);
+			ContextManager.moveAgentByVector(this, 0.0002, ang);
 			
-			if(((int)(ang * 10000)) == 31415 || ((int)(ang * 10000)) == 62831 || ((int)(ang * 10000)) == 15707 || ((int)(ang * 10000)) == 47123) {
+			if(((int)(ang * 10000)) == (int)(Math.PI * 10000) || ((int)(ang * 10000)) == (int)(2 * Math.PI * 10000) || ((int)(ang * 10000)) == (int)(Math.PI/2 * 10000) || ((int)(ang * 10000)) == (int)(3*Math.PI/2 * 10000)) {
 				
 				Junction newsourceJunction = route.get(atualIndex).getKey();
 				Junction newtargetJunction =  route.get(atualIndex + 1).getKey();
