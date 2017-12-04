@@ -34,7 +34,6 @@ public class ShortestPathCar extends Car {
 		atualIndexInJunction = 0;
 		atualIndex = 0;
 		route = new ArrayList<Pair<Junction, Vector<Coordinate>>>();
-		//System.out.println("Final: " + f);
 	}
 	
 	@ScheduledMethod (start = 1 , interval = 1)
@@ -58,15 +57,14 @@ public class ShortestPathCar extends Car {
 			ang = (Math.PI * 2) - ang;
 			
 			//System.out.println(ang);
-			ContextManager.moveAgentByVector(this, 2, ang);
+			ContextManager.moveAgentByVector(this, 0.0001, ang);
 			
 			if(((int)(ang * 10000)) == 31415 || ((int)(ang * 10000)) == 62831 || ((int)(ang * 10000)) == 15707 || ((int)(ang * 10000)) == 47123) {
-				atualIndex++;
+				
 				atualIndexInJunction = 0;
 				Junction newsourceJunction = route.get(atualIndex).getKey();
 				Junction newtargetJunction =  route.get(atualIndex + 1).getKey();
 				ContextManager.addIndexjunctionsCars(new Pair<Junction,Junction>(newsourceJunction, newtargetJunction ));
-				
 				
 				if(atualIndex > 0) {
 					Junction oldsourceJunction = route.get(atualIndex - 1).getKey(); 
@@ -75,6 +73,9 @@ public class ShortestPathCar extends Car {
 					ContextManager.subIndexjunctionsCars(new Pair<Junction,Junction>(oldsourceJunction, oldtargetJunction ));
 					
 				}
+				
+				atualIndex++;
+				
 			}
 		}
 		}
@@ -97,6 +98,7 @@ public class ShortestPathCar extends Car {
 		
 		Iterator<Junction> successors = ContextManager.streetNetwork.getSuccessors(actJunction).iterator();
 		
+		// reach destination
 		if(!successors.hasNext()) {
 			System.out.println("Exit");
 			return;

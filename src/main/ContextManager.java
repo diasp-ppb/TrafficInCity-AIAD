@@ -52,7 +52,7 @@ public class ContextManager  implements ContextBuilder <Object>{
 	public static Geography<Junction> junctionProjection;
 	public static Network<Junction> streetNetwork;
 	
-	public static HashMap<Pair<Junction,Junction>, Integer> JunctionCars = new HashMap<Pair<Junction,Junction>, Integer>();
+	public static HashMap<Pair<Junction,Junction>, Integer> carsInRoad = new HashMap<Pair<Junction,Junction>, Integer>();
 
 	public static GeometryFactory GF = new GeometryFactory();
 	
@@ -94,8 +94,8 @@ public class ContextManager  implements ContextBuilder <Object>{
 			
 			GISFunctions.buildGISRoadNetwork(roadProjection, junctionContext, junctionProjection, streetNetwork);
 			
-			//JunctionsCars
-			this.createjunctionsCars();
+			// storage  info for traffic intensity in network
+			this.createCarsInRoad();
 			
 			//Car Agents
 			carContext = new CarContext();
@@ -123,7 +123,6 @@ public class ContextManager  implements ContextBuilder <Object>{
 	   				
 
 			} catch (MalformedURLException | FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
@@ -136,12 +135,10 @@ public class ContextManager  implements ContextBuilder <Object>{
 	
 	public static synchronized void moveAgent(Car car, Point point ) {
 		ContextManager.carProjection.move(car, point);
-		//System.out.println(ContextManager.carProjection.getGeometry(car).equals(point));
 	}
 	
 	public static synchronized void moveAgentByVector(Car car, double dist, double ang) {
 		ContextManager.carProjection.moveByVector(car, dist, ang);
-		//System.out.println(ContextManager.carProjection.getGeometry(car).equals(point));
 	}
 	
 	public static Junction getJunction(Coordinate coord) {
@@ -156,21 +153,15 @@ public class ContextManager  implements ContextBuilder <Object>{
 		return null;
 	}
 	
-	public static synchronized void addIndexjunctionsCars(Pair<Junction,Junction> road) {
-		
-		//System.out.println("antes" + JunctionCars.get(road));		
-		JunctionCars.merge(road, 1, Integer::sum);		
-		//System.out.println("depois" + JunctionCars.get(road));
+	public static synchronized void addIndexjunctionsCars(Pair<Junction,Junction> road) {	
+		carsInRoad.merge(road, 1, Integer::sum);		
 	}
 	
 	public static synchronized void subIndexjunctionsCars(Pair<Junction,Junction> road) {
-		
-		//System.out.println("antes sub" + JunctionCars.get(road));		
-		JunctionCars.merge(road, -1, Integer::sum);		
-		//System.out.println("depois sub" + JunctionCars.get(road));
+		carsInRoad.merge(road, -1, Integer::sum);		
 	}
 	
-	public void createjunctionsCars() {
+	public void createCarsInRoad() {
 
 		Iterator<RepastEdge<Junction>> junctions = ContextManager.streetNetwork.getEdges().iterator();
 		
@@ -180,37 +171,10 @@ public class ContextManager  implements ContextBuilder <Object>{
 			Junction source = junction.getSource();
 			Junction target = junction.getTarget();
 						
-			ContextManager.JunctionCars.put(new Pair<Junction, Junction>(source, target), 0);
-			ContextManager.JunctionCars.put(new Pair<Junction, Junction>(target, source), 0);
-			
-			//System.out.println(junction.toString());
-			//System.out.println(pair.values());
-			
-			//System.out.println();
-		}
-		//System.out.println();
-		//System.out.println();
-		//System.out.println(ContextManager.JunctionCars);
-		
+			ContextManager.carsInRoad.put(new Pair<Junction, Junction>(source, target), 0);
+			ContextManager.carsInRoad.put(new Pair<Junction, Junction>(target, source), 0);
+		}	
 	}
-	
-//	public static synchronized List<Junction> getShortestPath(Point initialPoint, Point finalPoint){
-//		
-//		Junction initialJ = getJunction(new Coordinate(initialPoint.getX(), initialPoint.getY()));
-//		Junction finalJ = getJunction(new Coordinate(finalPoint.getX(), finalPoint.getY()));
-//		
-//		final int size = streetNetwork.size();
-//		
-//		final List<Junction> closedSet = new ArrayList<Junction>(size);
-//		final List<Junction> openSet = new ArrayList<Junction>(size);
-//		
-//		openSet.add(initialJ);
-//		streetNetwork.
-//		
-//		final Map<>
-//		
-//		return null;
-//	}
 	
 	public static synchronized void addSemaphoreToContext(Semaphore semaphore) {
 		ContextManager.semaphoreContext.add(semaphore);
@@ -218,6 +182,5 @@ public class ContextManager  implements ContextBuilder <Object>{
 	
 	public static synchronized void moveSemaphoreToPlace(Semaphore sem, Point point ) {
 		ContextManager.semaphoreProjection.move(sem, point);
-		//System.out.println(ContextManager.carProjection.getGeometry(car).equals(point));
 	}
 }

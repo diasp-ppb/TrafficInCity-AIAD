@@ -26,9 +26,5 @@ public class Car extends Agent{
 	public Point actualPos() {
 		return space.getGeometry(this).getCentroid();
 	}
-//	
-//	public void moveInSpace(Point nextPos) {
-//		Point actualPos = actualPos();
-//		this.space.move(this, nextPos);;
-//	}
+
 }
