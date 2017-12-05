@@ -1,14 +1,11 @@
 package environment;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.poi.ss.formula.functions.T;
 
 import repast.simphony.space.graph.RepastEdge;
 import environment.Road;
 
+@SuppressWarnings("hiding")
 public class NetworkEdge<T> extends RepastEdge<T> {
 	
 	private Road road;

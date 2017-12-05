@@ -1,7 +1,5 @@
 package environment;
 
-import java.util.Arrays;
-
 import repast.simphony.space.graph.EdgeCreator;
 
 public class NetworkEdgeCreator<T> implements EdgeCreator<NetworkEdge<T>, T> {
@@ -11,6 +9,7 @@ public class NetworkEdgeCreator<T> implements EdgeCreator<NetworkEdge<T>, T> {
 		return new NetworkEdge<T>(source, target, isDirected, weight);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Class getEdgeType() {
 		return NetworkEdge.class;
