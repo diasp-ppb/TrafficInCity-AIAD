@@ -43,7 +43,7 @@ public class ShortestPathCar extends Car {
 			Vector<Coordinate> coordsJuntion = route.get(atualIndex).getValue();
 
 			if (atualIndexInJunction < coordsJuntion.size()) {
-				System.out.println(ContextManager.carsInRoad.numberCars());
+				//System.out.println(ContextManager.carsInRoad.numberCars());
 
 				Coordinate point = coordsJuntion.get(atualIndexInJunction);
 
@@ -79,7 +79,7 @@ public class ShortestPathCar extends Car {
 						if(atualIndex < route.size() - 1 ) {
 							Junction newsourceJunction = route.get(atualIndex).getKey();
 							Junction newtargetJunction = route.get(atualIndex +1).getKey();
-							ContextManager.carsInRoad.subIndexjunctionsCars(
+							ContextManager.carsInRoad.addIndexjunctionsCars(
 									new Pair<Junction, Junction>(newsourceJunction, newtargetJunction));
 						}
 					} else
