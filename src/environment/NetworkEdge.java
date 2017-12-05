@@ -29,7 +29,8 @@ public class NetworkEdge<T> extends RepastEdge<T> {
 	public double getWeight() {
 		return super.getWeight() / this.getSpeed();
 	}
-
+    
+	
 	//TODO
 	public double getSpeed() {
 		return 1;

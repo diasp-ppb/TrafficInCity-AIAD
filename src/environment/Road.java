@@ -14,27 +14,24 @@ import environment.Identified;
 
 import exceptions.DuplicateIdentifierException;
 import exceptions.NoIdentifierException;
-/*import repastcity3.main.GlobalVars;*/
 import environment.Junction;
-/*import repastcity3.environment.NetworkEdge;*/
 
 public class Road implements FixedGeography, Identified {
 	
 	private String identifier;
 	private static Map<String, Object> idMap = new HashMap<String, Object>();
 	
-	/*transient*/
 	private ArrayList<Junction> junctions;
 
 	private Coordinate coord;
 	
-	/*transient*/
 	private NetworkEdge<Junction> edge;
 	
 	private String access;
 	private List<String> accessibility;
 	
 	private String name;
+	
 	private boolean majorRoad = false;
 	
 	public static Road nullRoad;

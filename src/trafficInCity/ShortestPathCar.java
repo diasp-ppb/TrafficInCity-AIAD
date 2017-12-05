@@ -3,11 +3,13 @@ package trafficInCity;
 import main.ContextManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
 import java.util.Vector;
@@ -249,10 +251,75 @@ public class ShortestPathCar extends Car {
 		Junction actJunction = ContextManager.getJunction(i);
 		Junction finalJunction = ContextManager.getJunction(f);
 		
+		System.out.println("inicial : " + actJunction);
+		System.out.println("final : "+ finalJunction);
+		System.out.println("-----");
 		
 		
+		PriorityQueue<Junction> queue = new PriorityQueue<Junction>(1000);
+		
+		Iterator<Junction> juncs = ContextManager.junctionContext.getObjects(Junction.class).iterator();
+		
+		
+		ArrayList<Junction> shortestPathList = new ArrayList<Junction>();
+		
+		resetWeightInJunctions();
+		
+		actJunction.setNodeWeight(0);
+		
+		queue.add(actJunction);
+		while(! queue.isEmpty()) {
+			Junction j = queue.poll();
+			Iterator<Junction> successors = ContextManager.streetNetwork.getSuccessors(j).iterator();
+			
+			while(successors.hasNext()) {
+				Junction n = successors.next();
+			
+				double newWeight =  j.getNodeWeight() + getRoadWeight(j,n);
+				
+				if(n.getNodeWeight() > newWeight) {
+					n.setNodeWeight(newWeight);
+					n.setPreviousNode(j);
+					queue.add(n);
+					if(n.equals(finalJunction))
+						System.out.println("Ultimo");
+				}
+			}
+		}
+		
+		Junction crawler = finalJunction;
+		while(!crawler.equals(actJunction)) {
+			shortestPathList.add(crawler.getPreviousNode());
+			System.out.println(crawler.getPreviousNode());
+			crawler = crawler.getPreviousNode();
+		}
+		
+		Collections.reverse(shortestPathList);
+		defineRoute(shortestPathList);
 		
 	}
+	
+	public double getRoadWeight(Junction n1, Junction n2) {
+		List<Road> connections =  n1.getRoads();
+		for(int i = 0; i < connections.size(); i++ ) {
+			Road road = connections.get(i);
+			ArrayList<Junction> current = road.getJunctions();
+		
+			if(current.contains(n1) && current.contains(n2)) {
+				return road.getEdge().getWeight();
+			}
+		}
+		return Double.MAX_VALUE;
+	}
+	
+	public void resetWeightInJunctions() {
+		Iterator<Junction> junctions =  ContextManager.junctionContext.getObjects(Junction.class).iterator();	
+		
+		while(junctions.hasNext()) {
+			Junction current = junctions.next();
+			current.setNodeWeight(Double.MAX_VALUE); 	
+		}
+}
 	
 	public void defineRoute(List<Junction> junctions) {
 	
