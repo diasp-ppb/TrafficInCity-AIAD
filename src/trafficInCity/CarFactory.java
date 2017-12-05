@@ -3,7 +3,6 @@ package trafficInCity;
 import java.util.Iterator;
 
 import environment.Junction;
-import environment.Road;
 import main.ContextManager;
 
 import repast.simphony.context.Context;

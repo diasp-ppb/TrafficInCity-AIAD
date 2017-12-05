@@ -1,11 +1,9 @@
 package environment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import trafficInCity.Car;
 
 
 public class Junction implements Comparable<Junction> {

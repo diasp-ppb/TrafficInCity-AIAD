@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -27,8 +25,6 @@ public class Road implements FixedGeography, Identified {
 	
 	private NetworkEdge<Junction> edge;
 	
-	private String access;
-	private List<String> accessibility;
 	
 	private String name;
 	
@@ -53,32 +49,10 @@ public class Road implements FixedGeography, Identified {
 		if (this.identifier == null || this.identifier == "") {
 			throw new NoIdentifierException("This road has no identifier.");
 		}
-		// Parse the access string and work out which accessibility methods can be used to travel this Road
-		if (this.access != null) { // Could be null because not using accessibility in GRID environment for example
-			this.accessibility = new ArrayList<String>();
-			for (String word : this.access.split(" ")) {
-				/*	if (word.equals(GlobalVars.TRANSPORT_PARAMS.MAJOR_ROAD)) {
-						// Special case: 'majorRoad' isn't a type of access, means the road is quick for car drivers
-						this.majorRoad = true;
-					} else {
-						// Otherwise just add the accessibility type to the list
-						this.accessibility.add(word);
-					}
-				}*/
-			}
-		}
-	}
-	
-	public void setAccess(String access) {
-		this.access = access;
 	}
 
 	public boolean isMajorRoad() {
 		return this.majorRoad;
-	}
-	
-	public List<String> getAccessibility() {
-		return this.accessibility;
 	}
 	
 	

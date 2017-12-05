@@ -1,46 +1,20 @@
 package environment;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import com.vividsolutions.jts.geom.*;
-
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 
 import repast.simphony.context.Context;
-import repast.simphony.context.DefaultContext;
-import repast.simphony.context.space.gis.GeographyFactoryFinder;
-import repast.simphony.context.space.graph.NetworkBuilder;
-import repast.simphony.dataLoader.ContextBuilder;
-import repast.simphony.engine.environment.RunEnvironment;
-import repast.simphony.engine.schedule.ISchedule;
-import repast.simphony.engine.schedule.ScheduleParameters;
-import repast.simphony.parameter.Parameters;
 import repast.simphony.space.gis.Geography;
-import repast.simphony.space.gis.GeographyParameters;
 import repast.simphony.space.gis.ShapefileLoader;
-import repast.simphony.space.gis.SimpleAdder;
 import repast.simphony.space.graph.Network;
-import repast.simphony.space.graph.RepastEdge;
-
-import environment.GISFunctions;
-import environment.Junction;
-import environment.NetworkEdge;
-import environment.NetworkEdgeCreator;
-import environment.Road;
-import context.JunctionContext;
-import context.RoadContext;
-import exceptions.NoIdentifierException;
 
 
 
@@ -87,11 +61,8 @@ public class GISFunctions {
 			junc1.addRoad(road);
 			junc2.addRoad(road);
 
-			NetworkEdge<Junction> edge = new NetworkEdge<Junction>(junc1, junc2, false, roadGeom.getLength(), road
-					.getAccessibility());
-			if (road.isMajorRoad())
-				edge.setMajorRoad(true);
-
+			NetworkEdge<Junction> edge = new NetworkEdge<Junction>(junc1, junc2, false, roadGeom.getLength());
+			
 			road.setEdge(edge);
 			edge.setRoad(road);
 

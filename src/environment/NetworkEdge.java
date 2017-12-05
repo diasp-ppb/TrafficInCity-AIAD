@@ -11,18 +11,11 @@ import environment.Road;
 
 public class NetworkEdge<T> extends RepastEdge<T> {
 	
-	private List<String> access = new ArrayList<String>();
-	
-	private boolean majorRoad = false;
-	
 	private Road road;
 	
 	
-	public NetworkEdge(T source, T target, boolean directed, double weight, List<String> initialAccess) {
+	public NetworkEdge(T source, T target, boolean directed, double weight) {
 		super(source, target, directed, weight);
-		if (initialAccess != null) {
-			this.access.addAll(initialAccess);
-		}
 	}
 	
 	@Override
@@ -35,19 +28,7 @@ public class NetworkEdge<T> extends RepastEdge<T> {
 	public double getSpeed() {
 		return 1;
 	}
-	
-	public List<String> getTypes() {
-		return this.access;
-	}
-	
-	public void addType(String type) {
-		this.access.add(type);
-	}
-	
-	public void setMajorRoad(boolean majorRoad) {
-		this.majorRoad = majorRoad;
-	}
-	
+
 	public Road getRoad() {
 		return road;
 	}
@@ -58,8 +39,7 @@ public class NetworkEdge<T> extends RepastEdge<T> {
 	
 	@Override
 	public String toString() {
-		return "Edge between " + this.getSource() + "->" + this.getTarget() + " accessible by "
-				+ this.access.toString() + (this.majorRoad ? " (is major road)" : "");
+		return "Edge between " + this.getSource() + "->" + this.getTarget();
 	}
 	
 	@Override
