@@ -43,6 +43,6 @@ public class Semaphore extends Agent{
 			actualTick = 0;
 			isGreen = !isGreen;
 		}
-		RunEnvironment.getInstance().setScheduleTickDelay(20);
+		//RunEnvironment.getInstance().setScheduleTickDelay(20);
 	}
 }

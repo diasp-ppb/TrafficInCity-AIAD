@@ -59,7 +59,7 @@ public class ShortestPathCar extends Car {
 			ang = (Math.PI * 2) - ang;
 			
 			//System.out.println(ang);
-			ContextManager.moveAgentByVector(this, 0.0002, ang);
+			ContextManager.moveAgentByVector(this, 0.0001 * ContextManager.carContext.size(), ang);
 			
 			int angl = (int) (ang * 10000);
 			int pi = (int) (Math.PI *10000);
