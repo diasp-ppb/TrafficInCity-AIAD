@@ -1,6 +1,6 @@
 package trafficInCity;
 
-import java.util.HashMap;
+
 
 import com.vividsolutions.jts.geom.Point;
 

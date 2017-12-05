@@ -22,7 +22,6 @@ public class SemaphoreFactory {
 			
 			while(junctionIterators.hasNext() && i < numSemaphors) {
 				Junction junction = junctionIterators.next();
-
 				Semaphore semaphore = new Semaphore(semaphoreProjection, ContextManager.junctionProjection.getGeometry(junction).getCentroid(), true, 20);
 				ContextManager.addSemaphoreToContext(semaphore);
 				ContextManager.moveSemaphoreToPlace(semaphore, ContextManager.junctionProjection.getGeometry(junction).getCentroid());	

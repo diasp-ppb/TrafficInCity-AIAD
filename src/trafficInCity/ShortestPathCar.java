@@ -29,7 +29,7 @@ public class ShortestPathCar extends Car {
 	private int atualIndexInJunction;
 	private int atualIndex;
 	private List<Pair<Junction, Vector<Coordinate>>> route;
-
+	
 	public ShortestPathCar (Geography<? extends Car> space, Point finalPos) {
 		super(space, finalPos);
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
@@ -37,6 +37,7 @@ public class ShortestPathCar extends Car {
 		atualIndex = 0;
 		route = new ArrayList<Pair<Junction, Vector<Coordinate>>>();
 	}
+	
 	
 	@ScheduledMethod (start = 1 , interval = 1)
 	public void move() {
@@ -242,6 +243,9 @@ public class ShortestPathCar extends Car {
 	}
 	
 	public void runDiskj() {
+		
+		
+		
 		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
 		
@@ -251,10 +255,7 @@ public class ShortestPathCar extends Car {
 		Junction actJunction = ContextManager.getJunction(i);
 		Junction finalJunction = ContextManager.getJunction(f);
 		
-		System.out.println("inicial : " + actJunction);
-		System.out.println("final : "+ finalJunction);
-		System.out.println("-----");
-		
+	
 		
 		PriorityQueue<Junction> queue = new PriorityQueue<Junction>(1000);
 		
@@ -281,8 +282,7 @@ public class ShortestPathCar extends Car {
 					n.setNodeWeight(newWeight);
 					n.setPreviousNode(j);
 					queue.add(n);
-					if(n.equals(finalJunction))
-						System.out.println("Ultimo");
+				
 				}
 			}
 		}
@@ -290,7 +290,6 @@ public class ShortestPathCar extends Car {
 		Junction crawler = finalJunction;
 		while(!crawler.equals(actJunction)) {
 			shortestPathList.add(crawler.getPreviousNode());
-			System.out.println(crawler.getPreviousNode());
 			crawler = crawler.getPreviousNode();
 		}
 		
