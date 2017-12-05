@@ -9,8 +9,7 @@ import repast.simphony.context.Context;
 import repast.simphony.space.gis.Geography;
 
 public class CarFactory {
-
-	public void createAgents(Context<Car> context, Geography<Car> carProjection) {
+	public void createAgents(Context<AgentTraffi> carContext, Geography<AgentTraffi> carProjection) {
 		int numCars = 40;
 	
 		for(int i = 0; i < numCars; i++) {
@@ -29,4 +28,5 @@ public class CarFactory {
 		}
 		
 	}
+
 }

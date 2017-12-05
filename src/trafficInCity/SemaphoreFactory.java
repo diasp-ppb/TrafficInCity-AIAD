@@ -12,7 +12,7 @@ import repast.simphony.space.gis.Geography;
 public class SemaphoreFactory {
 	public ArrayList<Junction> locationSemaphors = new ArrayList<Junction>();
 
-	public void createAgents(Context<Semaphore> context, Geography<Semaphore> semaphoreProjection) {
+	public void createAgents(Context<AgentTraffi> semaphoreContext, Geography<AgentTraffi> semaphoreProjection) {
 		int numSemaphors = 3;
 	
 		for(int i = 0; i < numSemaphors; i++) {

@@ -27,13 +27,14 @@ public class ShortestPathCar extends Car {
 	private int atualIndex;
 	private List<Pair<Junction, Vector<Coordinate>>> route;
 
-	public ShortestPathCar(Geography<? extends Car> space, Point finalPos) {
+	public ShortestPathCar(Geography<? extends AgentTraffi> space, Point finalPos) {
 		super(space, finalPos);
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
 		atualIndexInJunction = 0;
 		atualIndex = 0;
 		route = new ArrayList<Pair<Junction, Vector<Coordinate>>>();
 	}
+
 
 	@ScheduledMethod(start = 1, interval = 1)
 	public void move() {
@@ -57,7 +58,7 @@ public class ShortestPathCar extends Car {
 				ang = (Math.PI * 2) - ang;
 
 				// System.out.println(ang);
-				ContextManager.moveAgentByVector(this, 0.0001 * ContextManager.carContext.size(), ang);
+				ContextManager.moveAgentByVector(this, 0.0001 * ContextManager.agentTraffiContext.size(), ang);
 
 				int angl = (int) (ang * 10000);
 				int pi = (int) (Math.PI * 10000);

@@ -8,6 +8,7 @@ import repast.simphony.space.gis.Geography;
 import repast.simphony.space.gis.GeographyParameters;
 import repast.simphony.space.gis.SimpleAdder;
 import repast.simphony.space.graph.Network;
+import trafficInCity.AgentTraffi;
 import trafficInCity.Car;
 import trafficInCity.CarFactory;
 import trafficInCity.Semaphore;
@@ -22,10 +23,9 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
-import context.CarContext;
+import context.AgentTraffiContext;
 import context.JunctionContext;
 import context.RoadContext;
-import context.SemaphoreContext;
 import environment.GISFunctions;
 import environment.Junction;
 import environment.NetworkEdgeCreator;
@@ -38,11 +38,11 @@ public class ContextManager implements ContextBuilder<Object> {
 	public static Context<Road> roadContext;
 	public static Geography<Road> roadProjection;
 
-	public static Context<Car> carContext;
-	public static Geography<Car> carProjection;
+	/*public static Context<Car> carContext;
+	public static Geography<Car> carProjectio;*/
 
-	public static Context<Semaphore> semaphoreContext;
-	public static Geography<Semaphore> semaphoreProjection;
+	public static Context<AgentTraffi> agentTraffiContext;
+	public static Geography<AgentTraffi> agentTraffiProjection;
 
 	public static Context<Junction> junctionContext;
 	public static Geography<Junction> junctionProjection;
@@ -70,8 +70,8 @@ public class ContextManager implements ContextBuilder<Object> {
 			// storage info for traffic intensity in network
 			carsInRoad = new RoadTrafficIntensity();
 
-			createCarContext();
-			createSemaphoreContext();
+			//createCarContext();
+			createAgentsContext();
 
 		} catch (MalformedURLException | FileNotFoundException e) {
 			e.printStackTrace();
@@ -108,7 +108,7 @@ public class ContextManager implements ContextBuilder<Object> {
 
 		GISFunctions.buildGISRoadNetwork(roadProjection, junctionContext, junctionProjection, streetNetwork);
 	}
-
+/*
 	private void createCarContext() {
 		carContext = new CarContext();
 		mainContext.addSubContext(carContext);
@@ -118,29 +118,35 @@ public class ContextManager implements ContextBuilder<Object> {
 		CarFactory carFactory = new CarFactory();
 		carFactory.createAgents(carContext, carProjection);
 	}
-
-	private void createSemaphoreContext() {
-		semaphoreContext = new SemaphoreContext();
-		mainContext.addSubContext(semaphoreContext);
-		semaphoreProjection = GeographyFactoryFinder.createGeographyFactory(null).createGeography("semaphoreGeography",
-				semaphoreContext, new GeographyParameters<Semaphore>(new SimpleAdder<Semaphore>()));
+	*/
+	
+	
+	private void createAgentsContext() {
+		agentTraffiContext = new AgentTraffiContext();
+		mainContext.addSubContext(agentTraffiContext);
+		agentTraffiProjection = GeographyFactoryFinder.createGeographyFactory(null).createGeography("agentTraffiGeography",
+				agentTraffiContext, new GeographyParameters<AgentTraffi>(new SimpleAdder<AgentTraffi>()));
 
 		SemaphoreFactory semaphoreFactory = new SemaphoreFactory();
-		semaphoreFactory.createAgents(semaphoreContext, semaphoreProjection);
+		semaphoreFactory.createAgents(agentTraffiContext, agentTraffiProjection);
+		
+		CarFactory carFactory = new CarFactory();
+		carFactory.createAgents(agentTraffiContext, agentTraffiProjection);
 
 		this.locationSemaphors = semaphoreFactory.getLocationSemaphors();
 	}
+	
 
 	public static synchronized void addCarToContext(Car car) {
-		ContextManager.carContext.add(car);
+		ContextManager.agentTraffiContext.add(car);
 	}
 
 	public static synchronized void moveAgent(Car car, Point point) {
-		ContextManager.carProjection.move(car, point);
+		ContextManager.agentTraffiProjection.move(car, point);
 	}
 
 	public static synchronized void moveAgentByVector(Car car, double dist, double ang) {
-		ContextManager.carProjection.moveByVector(car, dist, ang);
+		ContextManager.agentTraffiProjection.moveByVector(car, dist, ang);
 	}
 
 	public static Junction getJunction(Coordinate coord) {
@@ -156,10 +162,10 @@ public class ContextManager implements ContextBuilder<Object> {
 	}
 
 	public static synchronized void addSemaphoreToContext(Semaphore semaphore) {
-		ContextManager.semaphoreContext.add(semaphore);
+		ContextManager.agentTraffiContext.add(semaphore);
 	}
 
 	public static synchronized void moveSemaphoreToPlace(Semaphore sem, Point point) {
-		ContextManager.semaphoreProjection.move(sem, point);
+		ContextManager.agentTraffiProjection.move(sem, point);
 	}
 }

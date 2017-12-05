@@ -7,14 +7,15 @@ import com.vividsolutions.jts.geom.Point;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.gis.Geography;
 
-public class Semaphore extends Agent{
-	protected Geography<? extends Semaphore> space;
+public class Semaphore extends AgentTraffi{
+	protected Geography<? extends AgentTraffi> space;
 	protected int isGreen;
 	protected int tickChange;	
 	protected int actualTick;
 	protected Point pos;
 	
-	public Semaphore(Geography<? extends Semaphore> space, Point pos,  boolean isGreen, int tickChange) {
+	public Semaphore(Geography<? extends AgentTraffi> space, Point pos,  boolean isGreen, int tickChange) {
+		super();
 		this.space = space;
 		this.isGreen = 10;
 		this.tickChange = tickChange + 50000;
