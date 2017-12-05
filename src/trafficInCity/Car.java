@@ -9,7 +9,7 @@ import javafx.util.Pair;
 import repast.simphony.space.gis.Geography;
 import sajas.core.Agent;
 
-public class Car extends Agent{
+public class Car extends Agent {
 	protected Geography<? extends Car> space;
 	protected Point finalPos;
 	protected Pair<Junction, Junction> roadDirection;

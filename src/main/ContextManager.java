@@ -8,6 +8,8 @@ import repast.simphony.space.gis.Geography;
 import repast.simphony.space.gis.GeographyParameters;
 import repast.simphony.space.gis.SimpleAdder;
 import repast.simphony.space.graph.Network;
+import sajas.wrapper.ContainerController;
+import sajas.core.Runtime;
 import trafficInCity.Car;
 import trafficInCity.CarFactory;
 import trafficInCity.Semaphore;
@@ -30,10 +32,14 @@ import environment.GISFunctions;
 import environment.Junction;
 import environment.NetworkEdgeCreator;
 import environment.Road;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
 
 public class ContextManager implements ContextBuilder<Object> {
 
 	private static Context<Object> mainContext;
+	
+	public static ContainerController mainContainer;
 
 	public static Context<Road> roadContext;
 	public static Geography<Road> roadProjection;
@@ -60,6 +66,10 @@ public class ContextManager implements ContextBuilder<Object> {
 
 		mainContext = con;
 		mainContext.setId("mainContext");
+		
+		Runtime rt = Runtime.instance();
+		Profile p1 = new ProfileImpl();
+		mainContainer = rt.createMainContainer(p1);
 
 		try {
 			createRoads();
