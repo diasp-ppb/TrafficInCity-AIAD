@@ -12,7 +12,7 @@ import repast.simphony.space.gis.Geography;
 public class CarFactory {
 
 	public void createAgents(Context<Car> context, Geography<Car> carProjection) {
-		int numCars = 50;
+		int numCars = 40;
 	
 		for(int i = 0; i < numCars; i++) {
 			Iterator<Junction> junction = ContextManager.junctionContext.getRandomObjects(Junction.class,numCars).iterator();
@@ -28,5 +28,6 @@ public class CarFactory {
 				i++;
 			}
 		}
+		
 	}
 }
