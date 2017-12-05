@@ -78,7 +78,7 @@ public class ShortestPathCar extends Car {
 						atualIndex++;
 						atualIndexInJunction = 0;
 						
-						if(atualIndex< route.size()) {
+						if(atualIndex < route.size() - 1 ) {
 							Junction newsourceJunction = route.get(atualIndex).getKey();
 							Junction newtargetJunction = route.get(atualIndex +1).getKey();
 							ContextManager.carsInRoad.subIndexjunctionsCars(
