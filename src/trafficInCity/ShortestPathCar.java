@@ -17,6 +17,8 @@ import com.vividsolutions.jts.geom.Point;
 
 import environment.Junction;
 import environment.Road;
+import jade.core.AID;
+import jade.lang.acl.ACLMessage;
 import javafx.util.Pair;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.gis.Geography;
@@ -38,6 +40,11 @@ public class ShortestPathCar extends Car {
 
 	@ScheduledMethod(start = 1, interval = 1)
 	public void move() {
+
+		ACLMessage msg = receive();
+		if (msg!=null) {
+			System.out.println("Car: Recebi a mensagem rádio: \"" + msg.getContent() + "\", obriado");
+		}
 
 		if (atualIndex < route.size() - 1) {
 
@@ -69,19 +76,19 @@ public class ShortestPathCar extends Car {
 
 						Junction oldsourceJunction = route.get(atualIndex).getKey();
 						Junction oldtargetJunction = route.get(atualIndex + 1).getKey();
-				///TODO		ContextManager.carsInRoad.subIndexjunctionsCars(
-				//				new Pair<Junction, Junction>(oldsourceJunction, oldtargetJunction));
-						
-						
+						///TODO		ContextManager.carsInRoad.subIndexjunctionsCars(
+						//				new Pair<Junction, Junction>(oldsourceJunction, oldtargetJunction));
+
+
 
 						atualIndex++;
 						atualIndexInJunction = 0;
-						
+
 						if(atualIndex < route.size() - 1 ) {
 							Junction newsourceJunction = route.get(atualIndex).getKey();
 							Junction newtargetJunction = route.get(atualIndex +1).getKey();
-					//TODO		ContextManager.carsInRoad.addIndexjunctionsCars(
-					//				new Pair<Junction, Junction>(newsourceJunction, newtargetJunction));
+							//TODO		ContextManager.carsInRoad.addIndexjunctionsCars(
+							//				new Pair<Junction, Junction>(newsourceJunction, newtargetJunction));
 						}
 					} else
 						atualIndexInJunction++;
@@ -241,9 +248,9 @@ public class ShortestPathCar extends Car {
 	}
 
 	public void runDiskj() {
-		
-		
-		
+
+
+
 		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
 
@@ -252,9 +259,9 @@ public class ShortestPathCar extends Car {
 
 		Junction actJunction = ContextManager.getJunction(i);
 		Junction finalJunction = ContextManager.getJunction(f);
-		
-	
-		
+
+
+
 		PriorityQueue<Junction> queue = new PriorityQueue<Junction>(1000);
 
 		ArrayList<Junction> shortestPathList = new ArrayList<Junction>();
@@ -277,7 +284,7 @@ public class ShortestPathCar extends Car {
 					n.setNodeWeight(newWeight);
 					n.setPreviousNode(j);
 					queue.add(n);
-				
+
 				}
 			}
 		}

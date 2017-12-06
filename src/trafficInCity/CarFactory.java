@@ -1,8 +1,9 @@
 package trafficInCity;
 
-import java.util.Iterator;
+import java.util.Random;
 
 import environment.Junction;
+import jade.wrapper.StaleProxyException;
 import main.ContextManager;
 
 import repast.simphony.context.Context;
@@ -11,22 +12,22 @@ import repast.simphony.space.gis.Geography;
 public class CarFactory {
 	public void createAgents(Context<AgentTraffi> carContext, Geography<AgentTraffi> carProjection) {
 		int numCars = 40;
-	
+		Random rand = new Random();
+
 		for(int i = 0; i < numCars; i++) {
-			Iterator<Junction> junction = ContextManager.junctionContext.getRandomObjects(Junction.class,numCars).iterator();
-			Iterator<Junction> junctionF = ContextManager.junctionContext.getRandomObjects(Junction.class,numCars).iterator();
-			
-			while(junction.hasNext() && i < numCars) {
-				Junction finalJunction = junctionF.next();
-				ShortestPathCar car = new ShortestPathCar(carProjection, ContextManager.junctionProjection.getGeometry(finalJunction).getCentroid());
-				ContextManager.addCarToContext(car);
-				Junction nextRoad = junction.next();
-				ContextManager.moveAgent(car, ContextManager.junctionProjection.getGeometry(nextRoad).getCentroid());
-				car.runDiskj();
-				i++;
+
+			Junction finalJunction = ContextManager.junctionContext.getRandomObject();
+			ShortestPathCar car = new ShortestPathCar(carProjection, ContextManager.junctionProjection.getGeometry(finalJunction).getCentroid());
+			ContextManager.addCarToContext(car);
+			Junction nextRoad = ContextManager.junctionContext.getRandomObject();
+			ContextManager.moveAgent(car, ContextManager.junctionProjection.getGeometry(nextRoad).getCentroid());
+			car.runDiskj();
+
+			try {
+				ContextManager.mainContainer.acceptNewAgent("SPCar"+rand.nextInt(Integer.MAX_VALUE), car).start();
+			} catch (StaleProxyException e) {
+				e.printStackTrace();
 			}
 		}
-		
 	}
-
 }

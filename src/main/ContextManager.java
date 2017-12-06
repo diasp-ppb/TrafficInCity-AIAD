@@ -9,6 +9,9 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
+import sajas.wrapper.ContainerController;
+import sajas.core.Runtime;
+
 import context.AgentTraffiContext;
 import context.JunctionContext;
 import context.RoadContext;
@@ -32,9 +35,14 @@ import trafficInCity.RadioFactory;
 import trafficInCity.Semaphore;
 import trafficInCity.SemaphoreFactory;
 
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+
 public class ContextManager implements ContextBuilder<Object> {
 
 	private static Context<Object> mainContext;
+	
+	public static ContainerController mainContainer;
 
 	public static Context<Road> roadContext;
 	public static Geography<Road> roadProjection;
@@ -57,6 +65,11 @@ public class ContextManager implements ContextBuilder<Object> {
 
 		mainContext = con;
 		mainContext.setId("mainContext");
+		
+
+		 Runtime rt = Runtime.instance();
+		 Profile p1 = new ProfileImpl();
+		 mainContainer = rt.createMainContainer(p1);
 
 		try {
 			createRoads();

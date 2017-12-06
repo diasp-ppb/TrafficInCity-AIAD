@@ -59,7 +59,6 @@ public class Road implements FixedGeography, Identified {
 	
 	public void setLoad(int load) {
 		this.load = load;
-		System.out.println(load);
 	}
 	
 	public boolean isMajorRoad() {
