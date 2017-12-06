@@ -108,18 +108,7 @@ public class ContextManager implements ContextBuilder<Object> {
 
 		GISFunctions.buildGISRoadNetwork(roadProjection, junctionContext, junctionProjection, streetNetwork);
 	}
-/*
-	private void createCarContext() {
-		carContext = new CarContext();
-		mainContext.addSubContext(carContext);
-		carProjection = GeographyFactoryFinder.createGeographyFactory(null).createGeography("carGeography", carContext,
-				new GeographyParameters<Car>(new SimpleAdder<Car>()));
 
-		CarFactory carFactory = new CarFactory();
-		carFactory.createAgents(carContext, carProjection);
-	}
-	*/
-	
 	
 	private void createAgentsContext() {
 		agentTraffiContext = new AgentTraffiContext();

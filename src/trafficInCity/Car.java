@@ -7,7 +7,6 @@ import com.vividsolutions.jts.geom.Point;
 import environment.Junction;
 import javafx.util.Pair;
 import repast.simphony.space.gis.Geography;
-import sajas.core.Agent;
 
 public class Car extends AgentTraffi {
 	protected Geography<? extends AgentTraffi> space;

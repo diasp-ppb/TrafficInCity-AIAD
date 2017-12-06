@@ -1,7 +1,5 @@
 package trafficInCity;
 
-import sajas.core.Agent;
-
 import com.vividsolutions.jts.geom.Point;
 
 import repast.simphony.engine.schedule.ScheduledMethod;
