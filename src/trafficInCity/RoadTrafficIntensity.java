@@ -1,10 +1,11 @@
-package main;
+package trafficInCity;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
 import environment.Junction;
 import javafx.util.Pair;
+import main.ContextManager;
 import repast.simphony.space.graph.RepastEdge;
 
 public class RoadTrafficIntensity {
@@ -44,7 +45,12 @@ public class RoadTrafficIntensity {
 			// do something with key and/or tab
 		}
 		return number;
-
 	}
-
+	
+	public int getRoadLoad(Pair<Junction,Junction> road) {
+		if(carsInRoad.containsKey(road))
+		return carsInRoad.get(road);
+		
+		return 0;
+	}
 }

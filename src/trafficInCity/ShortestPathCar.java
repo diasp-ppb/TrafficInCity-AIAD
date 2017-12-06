@@ -29,7 +29,7 @@ public class ShortestPathCar extends Car {
 
 	public ShortestPathCar(Geography<? extends AgentTraffi> space, Point finalPos) {
 		super(space, finalPos);
-		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
+		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY()); // TODO
 		atualIndexInJunction = 0;
 		atualIndex = 0;
 		route = new ArrayList<Pair<Junction, Vector<Coordinate>>>();

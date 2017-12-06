@@ -3,6 +3,5 @@
 <repast.simphony.dataLoader.engine.ClassNameDataLoaderAction context="mainContext" file="repast.simphony.dataLoader.engine.ClassNameDataLoaderAction_0.xml" />
 <repast.simphony.action.display context="AgentTrafficContext" file="repast.simphony.action.display_1.xml" />
 <repast.simphony.action.display context="CarContext" file="repast.simphony.action.display_2.xml" />
-<repast.simphony.action.display context="SemaphoreContext" file="repast.simphony.action.display_3.xml" />
-<repast.simphony.action.display context="RoadContext" file="repast.simphony.action.display_4.xml" />
+<repast.simphony.action.display context="RoadContext" file="repast.simphony.action.display_3.xml" />
 </Scenario>

@@ -27,7 +27,7 @@ public class Road implements FixedGeography, Identified {
 	
 	private String name;
 	
-	private int load = 2;
+	private int load;
 	
 	private boolean majorRoad = false;
 	
@@ -42,16 +42,9 @@ public class Road implements FixedGeography, Identified {
 		}
 	}
 	
-	public int getLoad() {
-		return load;
-	}
-	
-	public void setLoad(int load) {
-		this.load = load;
-	}
-	
 	public Road() {
 		this.junctions = new ArrayList<Junction>();
+		this.load = 0;
 	}
 	
 	public void initialise() throws NoIdentifierException {
@@ -59,7 +52,16 @@ public class Road implements FixedGeography, Identified {
 			throw new NoIdentifierException("This road has no identifier.");
 		}
 	}
-
+	
+	public int getLoad() {
+		return load;
+	}
+	
+	public void setLoad(int load) {
+		this.load = load;
+		System.out.println(load);
+	}
+	
 	public boolean isMajorRoad() {
 		return this.majorRoad;
 	}
