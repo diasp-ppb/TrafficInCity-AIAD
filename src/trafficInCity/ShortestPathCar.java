@@ -69,8 +69,8 @@ public class ShortestPathCar extends Car {
 
 						Junction oldsourceJunction = route.get(atualIndex).getKey();
 						Junction oldtargetJunction = route.get(atualIndex + 1).getKey();
-						ContextManager.carsInRoad.subIndexjunctionsCars(
-								new Pair<Junction, Junction>(oldsourceJunction, oldtargetJunction));
+				///TODO		ContextManager.carsInRoad.subIndexjunctionsCars(
+				//				new Pair<Junction, Junction>(oldsourceJunction, oldtargetJunction));
 						
 						
 
@@ -80,8 +80,8 @@ public class ShortestPathCar extends Car {
 						if(atualIndex < route.size() - 1 ) {
 							Junction newsourceJunction = route.get(atualIndex).getKey();
 							Junction newtargetJunction = route.get(atualIndex +1).getKey();
-							ContextManager.carsInRoad.addIndexjunctionsCars(
-									new Pair<Junction, Junction>(newsourceJunction, newtargetJunction));
+					//TODO		ContextManager.carsInRoad.addIndexjunctionsCars(
+					//				new Pair<Junction, Junction>(newsourceJunction, newtargetJunction));
 						}
 					} else
 						atualIndexInJunction++;
@@ -257,8 +257,6 @@ public class ShortestPathCar extends Car {
 		
 		PriorityQueue<Junction> queue = new PriorityQueue<Junction>(1000);
 
-		Iterator<Junction> juncs = ContextManager.junctionContext.getObjects(Junction.class).iterator();
-
 		ArrayList<Junction> shortestPathList = new ArrayList<Junction>();
 
 		resetWeightInJunctions();
@@ -319,10 +317,10 @@ public class ShortestPathCar extends Car {
 
 	public void defineRoute(List<Junction> junctions) {
 
-		if (junctions.size() >= 2) {
+		/*if (junctions.size() >= 2) {
 			ContextManager.carsInRoad
 					.addIndexjunctionsCars(new Pair<Junction, Junction>(junctions.get(0), junctions.get(1)));
-		}
+		}*/
 
 		for (int i = 1; i < junctions.size(); i++) {
 			Vector<Coordinate> coordsRoad = new Vector<Coordinate>();

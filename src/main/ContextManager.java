@@ -1,19 +1,5 @@
 package main;
 
-import repast.simphony.context.Context;
-import repast.simphony.context.space.gis.GeographyFactoryFinder;
-import repast.simphony.context.space.graph.NetworkBuilder;
-import repast.simphony.dataLoader.ContextBuilder;
-import repast.simphony.space.gis.Geography;
-import repast.simphony.space.gis.GeographyParameters;
-import repast.simphony.space.gis.SimpleAdder;
-import repast.simphony.space.graph.Network;
-import trafficInCity.AgentTraffi;
-import trafficInCity.Car;
-import trafficInCity.CarFactory;
-import trafficInCity.Semaphore;
-import trafficInCity.SemaphoreFactory;
-
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -30,6 +16,21 @@ import environment.GISFunctions;
 import environment.Junction;
 import environment.NetworkEdgeCreator;
 import environment.Road;
+import repast.simphony.context.Context;
+import repast.simphony.context.space.gis.GeographyFactoryFinder;
+import repast.simphony.context.space.graph.NetworkBuilder;
+import repast.simphony.dataLoader.ContextBuilder;
+import repast.simphony.space.gis.Geography;
+import repast.simphony.space.gis.GeographyParameters;
+import repast.simphony.space.gis.SimpleAdder;
+import repast.simphony.space.graph.Network;
+import trafficInCity.AgentTraffi;
+import trafficInCity.Car;
+import trafficInCity.CarFactory;
+import trafficInCity.Radio;
+import trafficInCity.RadioFactory;
+import trafficInCity.Semaphore;
+import trafficInCity.SemaphoreFactory;
 
 public class ContextManager implements ContextBuilder<Object> {
 
@@ -38,9 +39,6 @@ public class ContextManager implements ContextBuilder<Object> {
 	public static Context<Road> roadContext;
 	public static Geography<Road> roadProjection;
 
-	/*public static Context<Car> carContext;
-	public static Geography<Car> carProjectio;*/
-
 	public static Context<AgentTraffi> agentTraffiContext;
 	public static Geography<AgentTraffi> agentTraffiProjection;
 
@@ -48,7 +46,6 @@ public class ContextManager implements ContextBuilder<Object> {
 	public static Geography<Junction> junctionProjection;
 	public static Network<Junction> streetNetwork;
 
-	public static RoadTrafficIntensity carsInRoad;
 	public static ArrayList<Junction> locationSemaphors;
 
 	public static GeometryFactory GF = new GeometryFactory();
@@ -66,9 +63,6 @@ public class ContextManager implements ContextBuilder<Object> {
 			// create Road intersections
 			createJunctions();
 			createNetWork();
-
-			// storage info for traffic intensity in network
-			carsInRoad = new RoadTrafficIntensity();
 
 			//createCarContext();
 			createAgentsContext();
@@ -116,12 +110,16 @@ public class ContextManager implements ContextBuilder<Object> {
 		agentTraffiProjection = GeographyFactoryFinder.createGeographyFactory(null).createGeography("agentTraffiGeography",
 				agentTraffiContext, new GeographyParameters<AgentTraffi>(new SimpleAdder<AgentTraffi>()));
 
+		RadioFactory radioFactory = new RadioFactory();
+		radioFactory.createAgents(agentTraffiContext, agentTraffiProjection);
+		
 		SemaphoreFactory semaphoreFactory = new SemaphoreFactory();
 		semaphoreFactory.createAgents(agentTraffiContext, agentTraffiProjection);
 		
 		CarFactory carFactory = new CarFactory();
 		carFactory.createAgents(agentTraffiContext, agentTraffiProjection);
-
+		
+		
 		this.locationSemaphors = semaphoreFactory.getLocationSemaphors();
 	}
 	
@@ -156,5 +154,13 @@ public class ContextManager implements ContextBuilder<Object> {
 
 	public static synchronized void moveSemaphoreToPlace(Semaphore sem, Point point) {
 		ContextManager.agentTraffiProjection.move(sem, point);
+	}
+
+	public static void addRadioToContext(Radio radio) {
+		ContextManager.agentTraffiContext.add(radio);
+	}
+
+	public static void moveAgent(Radio radio, Point point) {
+		ContextManager.agentTraffiProjection.move(radio, point);
 	}
 }

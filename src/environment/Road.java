@@ -27,6 +27,8 @@ public class Road implements FixedGeography, Identified {
 	
 	private String name;
 	
+	private int load = 2;
+	
 	private boolean majorRoad = false;
 	
 	public static Road nullRoad;
@@ -38,6 +40,14 @@ public class Road implements FixedGeography, Identified {
 		} catch (DuplicateIdentifierException e) { // This should never happen
 			//LOGGER.log(Level.SEVERE, "", e);
 		}
+	}
+	
+	public int getLoad() {
+		return load;
+	}
+	
+	public void setLoad(int load) {
+		this.load = load;
 	}
 	
 	public Road() {

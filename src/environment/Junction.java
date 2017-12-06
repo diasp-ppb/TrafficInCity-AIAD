@@ -83,7 +83,6 @@ public class Junction implements Comparable<Junction> {
 	
 	public void setPreviousNode(Junction  node) {
 		previousNode = node;
-		System.out.println(previousNode);
 	}
 	
 	public Junction getPreviousNode() {
