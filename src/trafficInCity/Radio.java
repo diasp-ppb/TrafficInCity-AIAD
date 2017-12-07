@@ -17,10 +17,9 @@ public class Radio extends AgentTraffi{
 
 	public Radio () {
 		carTrafficInfo = new RoadTrafficIntensity();
-		a = true;
 	}
 
-	@ScheduledMethod(start = 1, interval = 1)
+	@ScheduledMethod(start = 1, interval = 1000)
 	public void updateAllRoadWeight() {
 		Iterator<Road> roads = ContextManager.roadContext.getObjects(Road.class).iterator();
 
@@ -38,29 +37,31 @@ public class Radio extends AgentTraffi{
 		    load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source, target));
 			 
 			current.setLoad(load);
-			
-			if(a) {
-				Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(Car.class).iterator();
-				String msg = "Oi, sou o radio";
-				System.out.println("Radio: " + msg);
-				
-				while(cars.hasNext()) {
-					Car c = (Car) cars.next();
-					
-					AID receiver = (AID) c.getAID();
-					sendMessage(receiver, msg);
-				}
-				a = false;
-			}
 		}
+		
+			Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(Car.class).iterator();
+			String msg = generateMessage();
+			System.out.println("Radio: " + msg);
+			
+			while(cars.hasNext()) {
+				Car c = (Car) cars.next();
+				
+				AID receiver = (AID) c.getAID();
+				sendMessage(receiver, msg);
+			}
 	}
 
-	public void sendMessage(AID car, String message) {
+	private void sendMessage(AID car, String message) {
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
 		msg.setContent(message);
 		msg.addReceiver(car);
 		send(msg);
 	}
+	
+	private String generateMessage() {
+		return carTrafficInfo.data();
+	}
+	
 	
 	public synchronized void addIndexjunctionsCars(Pair<Junction,Junction> road) {
 		carTrafficInfo.addIndexjunctionsCars(road);

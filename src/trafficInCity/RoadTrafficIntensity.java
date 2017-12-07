@@ -2,6 +2,7 @@ package trafficInCity;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import environment.Junction;
 import javafx.util.Pair;
@@ -42,7 +43,6 @@ public class RoadTrafficIntensity {
 		int number = 0;
 		for (HashMap.Entry<Pair<Junction, Junction>, Integer> entry : carsInRoad.entrySet()) {
 			number += entry.getValue();
-			// do something with key and/or tab
 		}
 		return number;
 	}
@@ -52,5 +52,17 @@ public class RoadTrafficIntensity {
 		return carsInRoad.get(road);
 		
 		return 0;
+	}
+	
+	public String data() {
+		String data = "TRAFFIC INFO: ";
+		
+		Iterator<Entry<Pair<Junction, Junction>, Integer>> dataStorage = carsInRoad.entrySet().iterator();
+		
+		while(dataStorage.hasNext()) {
+			Entry<Pair<Junction,Junction>, Integer> dataStatus = dataStorage.next();
+			data += "<Junction " + dataStatus.getKey().getKey() +",Junction "+ dataStatus.getKey().getValue() +","+ dataStatus.getValue() +">";
+		}
+		return data;
 	}
 }
