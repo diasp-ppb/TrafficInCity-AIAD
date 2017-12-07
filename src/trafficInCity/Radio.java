@@ -6,6 +6,7 @@ import environment.Junction;
 import environment.Road;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
+import javafx.util.Pair;
 import main.ContextManager;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
@@ -26,16 +27,16 @@ public class Radio extends AgentTraffi{
 		int load;
 
 		while(roads.hasNext()) {
-			load = 3;
+			load = 0;
 
 			Road current =  roads.next();
 			Junction source = current.getJunctions().get(0);
 			Junction target = current.getJunctions().get(1);
 
-			/*
-		      load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source, target));
-		      load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source, target));
-			 */
+			
+		    load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source, target));
+		    load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source, target));
+			 
 			current.setLoad(load);
 			
 			if(a) {
@@ -59,5 +60,13 @@ public class Radio extends AgentTraffi{
 		msg.setContent(message);
 		msg.addReceiver(car);
 		send(msg);
+	}
+	
+	public synchronized void addIndexjunctionsCars(Pair<Junction,Junction> road) {
+		carTrafficInfo.addIndexjunctionsCars(road);
+	}
+	
+	public synchronized void subIndexjunctionsCars(Pair<Junction,Junction> road) {
+		carTrafficInfo.subIndexjunctionsCars(road);
 	}
 }

@@ -17,7 +17,6 @@ import com.vividsolutions.jts.geom.Point;
 
 import environment.Junction;
 import environment.Road;
-import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import javafx.util.Pair;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -31,7 +30,6 @@ public class ShortestPathCar extends Car {
 
 	public ShortestPathCar(Geography<? extends AgentTraffi> space, Point finalPos) {
 		super(space, finalPos);
-		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY()); // TODO
 		atualIndexInJunction = 0;
 		atualIndex = 0;
 		route = new ArrayList<Pair<Junction, Vector<Coordinate>>>();
@@ -76,9 +74,15 @@ public class ShortestPathCar extends Car {
 
 						Junction oldsourceJunction = route.get(atualIndex).getKey();
 						Junction oldtargetJunction = route.get(atualIndex + 1).getKey();
-						///TODO		ContextManager.carsInRoad.subIndexjunctionsCars(
-						//				new Pair<Junction, Junction>(oldsourceJunction, oldtargetJunction));
-
+						
+						Iterator<AgentTraffi> radios = ContextManager.agentTraffiContext.getObjects(Radio.class).iterator();
+						
+						if(radios.hasNext()) {
+							Radio radio = (Radio)radios.next();
+							radio.subIndexjunctionsCars(new Pair<Junction,Junction> (oldsourceJunction,oldtargetJunction));
+						}
+							
+						
 
 
 						atualIndex++;
@@ -87,8 +91,13 @@ public class ShortestPathCar extends Car {
 						if(atualIndex < route.size() - 1 ) {
 							Junction newsourceJunction = route.get(atualIndex).getKey();
 							Junction newtargetJunction = route.get(atualIndex +1).getKey();
-							//TODO		ContextManager.carsInRoad.addIndexjunctionsCars(
-							//				new Pair<Junction, Junction>(newsourceJunction, newtargetJunction));
+							
+							Iterator<AgentTraffi> radiosAtual = ContextManager.agentTraffiContext.getObjects(Radio.class).iterator();
+							
+							if(radiosAtual.hasNext()) {
+								Radio radioAtual = (Radio)radiosAtual.next();
+								radioAtual.addIndexjunctionsCars(new Pair<Junction,Junction> (newsourceJunction,newtargetJunction));
+							}
 						}
 					} else
 						atualIndexInJunction++;
@@ -324,11 +333,13 @@ public class ShortestPathCar extends Car {
 
 	public void defineRoute(List<Junction> junctions) {
 
-		/*if (junctions.size() >= 2) {
-			ContextManager.carsInRoad
-					.addIndexjunctionsCars(new Pair<Junction, Junction>(junctions.get(0), junctions.get(1)));
-		}*/
-
+		Iterator<AgentTraffi> radios = ContextManager.agentTraffiContext.getObjects(Radio.class).iterator();
+		
+		if(radios.hasNext() && junctions.size() >= 2) {
+			Radio radio = (Radio)radios.next();
+			radio.subIndexjunctionsCars(new Pair<Junction,Junction> (junctions.get(0), junctions.get(1)));
+		}
+		
 		for (int i = 1; i < junctions.size(); i++) {
 			Vector<Coordinate> coordsRoad = new Vector<Coordinate>();
 			Iterator<Road> roads = ContextManager.roadContext.getObjects(Road.class).iterator();
