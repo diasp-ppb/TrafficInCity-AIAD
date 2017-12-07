@@ -42,6 +42,7 @@ public class RoadTrafficIntensity {
 		int number = 0;
 		for (HashMap.Entry<Pair<Junction, Junction>, Integer> entry : carsInRoad.entrySet()) {
 			number += entry.getValue();
+			// do something with key and/or tab
 		}
 		return number;
 	}
