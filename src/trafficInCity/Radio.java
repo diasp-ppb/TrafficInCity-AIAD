@@ -50,13 +50,6 @@ public class Radio extends AgentTraffi{
 				sendMessage(receiver, msg);
 			}
 	}
-
-	private void sendMessage(AID car, String message) {
-		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-		msg.setContent(message);
-		msg.addReceiver(car);
-		send(msg);
-	}
 	
 	private String generateMessage() {
 		return carTrafficInfo.data();

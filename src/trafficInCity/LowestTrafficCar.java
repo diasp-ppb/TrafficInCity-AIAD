@@ -35,8 +35,9 @@ public class LowestTrafficCar extends Car {
 	public void move() {
 
 		ACLMessage msg = receive();
-		if (msg!=null) {
-			System.out.println("Car: Recebi a mensagem rádio: \"" + msg.getContent() + "\", obriado");
+		while(msg!=null) {
+			System.out.println("LowestTrafficCar: Sender: " + msg.getSender() + ", Message: " + msg.getContent());
+			msg = receive();
 		}
 
 		if (atualIndex < route.size() - 1) {

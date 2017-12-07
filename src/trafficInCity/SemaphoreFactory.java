@@ -2,8 +2,10 @@ package trafficInCity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import environment.Junction;
+import jade.wrapper.StaleProxyException;
 import main.ContextManager;
 
 import repast.simphony.context.Context;
@@ -14,24 +16,26 @@ public class SemaphoreFactory {
 
 	public void createAgents(Context<AgentTraffi> semaphoreContext, Geography<AgentTraffi> semaphoreProjection) {
 		int numSemaphors = 3;
-	
+		Random rand = new Random();
+
 		for(int i = 0; i < numSemaphors; i++) {
-			//Iterator<Road> road = ContextManager.roadContext.getRandomObjects(Road.class,numSemaphors).iterator();
-			Iterator<Junction> junctionIterators = ContextManager.junctionContext.getRandomObjects(Junction.class,numSemaphors).iterator();
 			
-			while(junctionIterators.hasNext() && i < numSemaphors) {
-				Junction junction = junctionIterators.next();
-				Semaphore semaphore = new Semaphore(semaphoreProjection, ContextManager.junctionProjection.getGeometry(junction).getCentroid(), true, 20);
-				ContextManager.addSemaphoreToContext(semaphore);
-				ContextManager.moveSemaphoreToPlace(semaphore, ContextManager.junctionProjection.getGeometry(junction).getCentroid());	
-				locationSemaphors.add(junction);
-				i++;
+			Junction junction = ContextManager.junctionContext.getRandomObject();
+			Semaphore semaphore = new Semaphore(semaphoreProjection, ContextManager.junctionProjection.getGeometry(junction).getCentroid(), true, 50000);
+			ContextManager.addSemaphoreToContext(semaphore);
+			ContextManager.moveSemaphoreToPlace(semaphore, ContextManager.junctionProjection.getGeometry(junction).getCentroid());	
+			locationSemaphors.add(junction);
+
+			try {
+				ContextManager.mainContainer.acceptNewAgent("SPSemaphore"+rand.nextInt(Integer.MAX_VALUE), semaphore).start();
+			} catch (StaleProxyException e) {
+				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
-	
+
 	public ArrayList<Junction> getLocationSemaphors() {
 		return locationSemaphors;
 	}

@@ -1,7 +1,12 @@
 package trafficInCity;
 
+import java.util.Iterator;
+import java.util.Random;
+
 import com.vividsolutions.jts.geom.Point;
 
+import jade.core.AID;
+import main.ContextManager;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.gis.Geography;
 
@@ -12,12 +17,19 @@ public class Semaphore extends AgentTraffi{
 	protected int actualTick;
 	protected Point pos;
 	
+	protected boolean a;
+	
 	public Semaphore(Geography<? extends AgentTraffi> space, Point pos,  boolean isGreen, int tickChange) {
 		super();
 		this.space = space;
 		this.isGreen = 10;
-		this.tickChange = tickChange + 50000;
-		this.actualTick = 0;
+		this.tickChange = tickChange;
+		Random r = new Random();
+		a = true;
+		
+		int act = r.nextInt(tickChange);
+		this.actualTick = act;
+		
 		this.pos= pos;
 	}
 	
@@ -35,9 +47,26 @@ public class Semaphore extends AgentTraffi{
 		return isGreen;
 	}
 	
-	
-	
 	@ScheduledMethod(start = 1, interval = 1)
+	public void run() {
+		verifySemaphoreColor();
+		
+		if(a) {
+			Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(Car.class).iterator();
+			String msg = "Oi, sou o semáforo";
+			System.out.println("Semaforo: " + msg);
+			
+			while(cars.hasNext()) {
+				Car c = (Car) cars.next();
+				
+				AID receiver = (AID) c.getAID();
+				sendMessage(receiver, msg);
+			}
+			a = false;
+		}
+		
+	}
+	
 	public void verifySemaphoreColor() {
 		if (actualTick < tickChange)
 			actualTick++;
@@ -45,6 +74,5 @@ public class Semaphore extends AgentTraffi{
 			actualTick = 0;
 			isGreen = Math.abs(isGreen - 10);
 		}
-		//RunEnvironment.getInstance().setScheduleTickDelay(20);
 	}
 }
