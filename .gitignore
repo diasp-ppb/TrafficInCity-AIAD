@@ -6,3 +6,4 @@ bin/
 *.class
 *.log
 *.log.*
+Repast\.settings

@@ -1,6 +1,9 @@
 package trafficInCity;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import environment.Junction;
 import environment.Road;
@@ -38,21 +41,9 @@ public class Radio extends AgentTraffi{
 		    load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source, target));
 			 
 			current.setLoad(load);
-			
-			if(a) {
-				Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(Car.class).iterator();
-				String msg = "Oi, sou o radio";
-				System.out.println("Radio: " + msg);
-				
-				while(cars.hasNext()) {
-					Car c = (Car) cars.next();
-					
-					AID receiver = (AID) c.getAID();
-					sendMessage(receiver, msg);
-				}
-				a = false;
-			}
 		}
+		
+		sendInfoToAllCars();
 	}
 
 	public void sendMessage(AID car, String message) {
@@ -68,5 +59,45 @@ public class Radio extends AgentTraffi{
 	
 	public synchronized void subIndexjunctionsCars(Pair<Junction,Junction> road) {
 		carTrafficInfo.subIndexjunctionsCars(road);
+	}
+	
+	public void sendInfoToAllCars() {
+		Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(LowestTrafficCar.class).iterator();
+		
+		String msg = generateMessage();
+		System.out.println("Radio: " + msg);
+		
+		while(cars.hasNext()) {
+			LowestTrafficCar current = (LowestTrafficCar) cars.next();
+			
+			while(cars.hasNext()) {
+				AID receiver = (AID) current.getAID();
+				sendMessage(receiver, msg);
+			}
+		}
+	}
+	
+	
+	private String generateMessage() {
+		HashMap<Pair<Junction,Junction>,Integer> carsInRoad = carTrafficInfo.getCarsInRoad();
+		
+		Set<Entry<Pair<Junction, Junction>, Integer>>  data = carsInRoad.entrySet();
+		String message = "STATUS:";
+		
+		Iterator<Entry<Pair<Junction, Junction>, Integer>> iterator = data.iterator();
+		
+		while(iterator.hasNext()) {
+			Entry<Pair<Junction,Junction>, Integer> roadLoad = iterator.next();
+			
+			Pair<Junction,Junction> road = roadLoad.getKey();
+			Integer load = roadLoad.getValue();
+			
+			message +=" <Junction "+ road.getKey().getId() + 
+					  "," 
+				  	 +"Junction " + road.getValue().getId()+
+				  	  ","
+				  	 +load+">";
+		}
+		return message;
 	}
 }
