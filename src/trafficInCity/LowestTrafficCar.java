@@ -36,7 +36,6 @@ public class LowestTrafficCar extends Car {
 
 		ACLMessage msg = receive();
 		while(msg!=null) {
-			System.out.println("LowestTrafficCar: Sender: " + msg.getSender() + ", Message: " + msg.getContent());
 			msg = receive();
 		}
 
@@ -180,7 +179,7 @@ public class LowestTrafficCar extends Car {
 		
 		if(radios.hasNext() && junctions.size() >= 2) {
 			Radio radio = (Radio)radios.next();
-			radio.subIndexjunctionsCars(new Pair<Junction,Junction> (junctions.get(0), junctions.get(1)));
+			radio.addIndexjunctionsCars(new Pair<Junction,Junction> (junctions.get(0), junctions.get(1)));
 		}
 		
 		for (int i = 1; i < junctions.size(); i++) {

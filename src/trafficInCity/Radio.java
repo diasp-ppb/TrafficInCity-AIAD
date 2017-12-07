@@ -13,7 +13,6 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 
 public class Radio extends AgentTraffi{
 	private RoadTrafficIntensity carTrafficInfo;
-	private boolean a;
 
 	public Radio () {
 		carTrafficInfo = new RoadTrafficIntensity();
@@ -41,7 +40,6 @@ public class Radio extends AgentTraffi{
 		
 			Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(Car.class).iterator();
 			String msg = generateMessage();
-			System.out.println("Radio: " + msg);
 			
 			while(cars.hasNext()) {
 				Car c = (Car) cars.next();

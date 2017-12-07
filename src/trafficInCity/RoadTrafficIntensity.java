@@ -28,11 +28,14 @@ public class RoadTrafficIntensity {
 	}
 
 	public synchronized void addIndexjunctionsCars(Pair<Junction, Junction> road) {
-		carsInRoad.merge(road, 1, Integer::sum);
+		carsInRoad.put(road, carsInRoad.get(road)+ 1);
+		//System.out.println(road + " +1" );
+
 	}
 
 	public synchronized void subIndexjunctionsCars(Pair<Junction, Junction> road) {
-		carsInRoad.merge(road, -1, Integer::sum);
+		carsInRoad.put(road, carsInRoad.get(road)- 1);
+		//System.out.println(road + " -1" );
 	}
 
 	public HashMap<Pair<Junction, Junction>, Integer> getCarsInRoad() {
@@ -61,7 +64,7 @@ public class RoadTrafficIntensity {
 		
 		while(dataStorage.hasNext()) {
 			Entry<Pair<Junction,Junction>, Integer> dataStatus = dataStorage.next();
-			data += "<Junction " + dataStatus.getKey().getKey() +",Junction "+ dataStatus.getKey().getValue() +","+ dataStatus.getValue() +">";
+			data += "<" + dataStatus.getKey().getKey() +","+ dataStatus.getKey().getValue() +","+ dataStatus.getValue() +">";
 		}
 		return data;
 	}
