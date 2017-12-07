@@ -8,6 +8,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
 
 import environment.Junction;
+import jade.core.AID;
 import javafx.util.Pair;
 import main.ContextManager;
 import repast.simphony.space.gis.Geography;
@@ -65,6 +66,30 @@ public class Car extends AgentTraffi {
 		}
 
 		System.out.println("fim do ciclo");
+	}
+	
+	public boolean isSemaphoreAgent(AID senderAID) {
+		Iterator<AgentTraffi> semaphores = ContextManager.agentTraffiContext.getObjects(Semaphore.class).iterator();
+		
+		while(semaphores.hasNext()) {
+			Semaphore s = (Semaphore) semaphores.next();
+			
+			if(s.getAID().equals(senderAID))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean isRadioAgent(AID senderAID) {
+		Iterator<AgentTraffi> radios = ContextManager.agentTraffiContext.getObjects(Radio.class).iterator();
+		
+		while(radios.hasNext()) {
+			Radio r = (Radio) radios.next();
+			
+			if(r.getAID().equals(senderAID))
+				return true;
+		}
+		return false;
 	}
 
 }

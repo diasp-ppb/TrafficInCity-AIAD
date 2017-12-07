@@ -17,58 +17,52 @@ public class Semaphore extends AgentTraffi{
 	protected int tickChange;	
 	protected int actualTick;
 	protected Point pos;
-	
+
 	protected boolean a;
-	
+
 	public Semaphore(Geography<? extends AgentTraffi> space, Point pos,  boolean isGreen, int tickChange) {
 		super();
 		this.space = space;
 		this.isGreen = 10;
 		this.tickChange = tickChange;
 		Random r = new Random();
-		a = true;
-		
 		int act = r.nextInt(tickChange);
 		this.actualTick = act;
-		
+
 		this.pos= pos;
 	}
-	
+
 	/*
 	@Override
 	public void setup() {
 		System.out.println("Oi, sou o semáforo");
 	}
-	*/
+	 */
 	public int isSemaphoreGreen() {
 		return isGreen;
 	}
-	
+
 	public int getIsGreen() {
 		return isGreen;
 	}
-	
-	@ScheduledMethod(start = 1, interval = 1)
+
+	@ScheduledMethod(start = 1, interval = 500)
 	public void run() {
 		verifySemaphoreColor();
-		
-		if(a) {
-			Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(Car.class).iterator();
-			Coordinate pos = ContextManager.agentTraffiProjection.getGeometry(this).getCoordinate();
-			String msg = "<" + "<" + pos.x + "," + pos.x + ">," + isGreen + ">";
-			System.out.println("Semaforo: " + msg);
-			
-			while(cars.hasNext()) {
-				Car c = (Car) cars.next();
-				
-				AID receiver = (AID) c.getAID();
-				sendMessage(receiver, msg);
-			}
-			a = false;
+
+		Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(Car.class).iterator();
+		Coordinate pos = ContextManager.agentTraffiProjection.getGeometry(this).getCoordinate();
+		String msg =  pos.x + "%" + pos.y + "%" + isGreen;
+
+		while(cars.hasNext()) {
+			Car c = (Car) cars.next();
+
+			AID receiver = (AID) c.getAID();
+			sendMessage(receiver, msg);
 		}
-		
+
 	}
-	
+
 	public void verifySemaphoreColor() {
 		if (actualTick < tickChange)
 			actualTick++;
