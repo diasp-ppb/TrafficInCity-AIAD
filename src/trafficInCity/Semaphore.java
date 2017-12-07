@@ -3,6 +3,7 @@ package trafficInCity;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
 
 import jade.core.AID;
@@ -53,7 +54,8 @@ public class Semaphore extends AgentTraffi{
 		
 		if(a) {
 			Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(Car.class).iterator();
-			String msg = "Oi, sou o semáforo";
+			Coordinate pos = ContextManager.agentTraffiProjection.getGeometry(this).getCoordinate();
+			String msg = "<" + "<" + pos.x + "," + pos.x + ">," + isGreen + ">";
 			System.out.println("Semaforo: " + msg);
 			
 			while(cars.hasNext()) {
