@@ -40,8 +40,8 @@ public class ShortestPathCar extends Car {
 	public void move() {
 
 		ACLMessage msg = receive();
-		if (msg!=null) {
-			System.out.println("Car: Recebi a mensagem rádio: \"" + msg.getContent() + "\", obriado");
+		while(msg!=null) {
+			msg = receive();
 		}
 
 		if (atualIndex < route.size() - 1) {
@@ -62,7 +62,6 @@ public class ShortestPathCar extends Car {
 				ang = ((Math.PI * 2) + ang) % (Math.PI * 2);
 				ang = (Math.PI * 2) - ang;
 
-				// System.out.println(ang);
 				ContextManager.moveAgentByVector(this, 0.0001 * ContextManager.agentTraffiContext.size(), ang);
 
 				int angl = (int) (ang * 10000);
@@ -301,7 +300,7 @@ public class ShortestPathCar extends Car {
 		
 		if(radios.hasNext() && junctions.size() >= 2) {
 			Radio radio = (Radio)radios.next();
-			radio.subIndexjunctionsCars(new Pair<Junction,Junction> (junctions.get(0), junctions.get(1)));
+			radio.addIndexjunctionsCars(new Pair<Junction,Junction> (junctions.get(0), junctions.get(1)));
 		}
 		
 		for (int i = 1; i < junctions.size(); i++) {

@@ -2,6 +2,7 @@ package trafficInCity;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import environment.Junction;
 import javafx.util.Pair;
@@ -27,11 +28,14 @@ public class RoadTrafficIntensity {
 	}
 
 	public synchronized void addIndexjunctionsCars(Pair<Junction, Junction> road) {
-		carsInRoad.merge(road, 1, Integer::sum);
+		carsInRoad.put(road, carsInRoad.get(road)+ 1);
+		//System.out.println(road + " +1" );
+
 	}
 
 	public synchronized void subIndexjunctionsCars(Pair<Junction, Junction> road) {
-		carsInRoad.merge(road, -1, Integer::sum);
+		carsInRoad.put(road, carsInRoad.get(road)- 1);
+		//System.out.println(road + " -1" );
 	}
 
 	public HashMap<Pair<Junction, Junction>, Integer> getCarsInRoad() {
@@ -42,7 +46,6 @@ public class RoadTrafficIntensity {
 		int number = 0;
 		for (HashMap.Entry<Pair<Junction, Junction>, Integer> entry : carsInRoad.entrySet()) {
 			number += entry.getValue();
-			// do something with key and/or tab
 		}
 		return number;
 	}
@@ -52,5 +55,17 @@ public class RoadTrafficIntensity {
 		return carsInRoad.get(road);
 		
 		return 0;
+	}
+	
+	public String data() {
+		String data = "TRAFFIC INFO: ";
+		
+		Iterator<Entry<Pair<Junction, Junction>, Integer>> dataStorage = carsInRoad.entrySet().iterator();
+		
+		while(dataStorage.hasNext()) {
+			Entry<Pair<Junction,Junction>, Integer> dataStatus = dataStorage.next();
+			data += "<" + dataStatus.getKey().getKey() +","+ dataStatus.getKey().getValue() +","+ dataStatus.getValue() +">";
+		}
+		return data;
 	}
 }
