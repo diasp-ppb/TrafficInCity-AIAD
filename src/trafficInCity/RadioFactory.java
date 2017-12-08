@@ -13,13 +13,13 @@ public class RadioFactory {
 	public void createAgents(Context<AgentTraffi> carContext, Geography<AgentTraffi> carProjection) {
 		Junction junction = ContextManager.junctionContext.getRandomObject();
 		Random rand = new Random();
-		
+
 		Radio radio = new Radio();
 		ContextManager.addRadioToContext(radio);
 		ContextManager.moveAgent(radio, ContextManager.junctionProjection.getGeometry(junction).getCentroid());
 
 		try {
-			ContextManager.mainContainer.acceptNewAgent("SPRadio"+rand.nextInt(Integer.MAX_VALUE), radio).start();
+			ContextManager.mainContainer.acceptNewAgent("SPRadio" + rand.nextInt(Integer.MAX_VALUE), radio).start();
 		} catch (StaleProxyException e) {
 			e.printStackTrace();
 		}

@@ -1,7 +1,5 @@
 package trafficInCity;
 
-
-
 import java.util.Iterator;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -17,21 +15,21 @@ public class Car extends AgentTraffi {
 	protected Geography<? extends AgentTraffi> space;
 	protected Point finalPos;
 	protected Pair<Junction, Junction> roadDirection;
-	
+
 	public Car(Geography<? extends AgentTraffi> space, Point finalPos) {
 		super();
 		this.space = space;
 		this.finalPos = finalPos;
 	}
-	
+
 	public Point getFinalPos() {
 		return finalPos;
 	}
-	
+
 	public Point actualPos() {
 		return space.getGeometry(this).getCentroid();
 	}
-	
+
 	public void moveAgentInStreet() {
 		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
@@ -67,26 +65,26 @@ public class Car extends AgentTraffi {
 
 		System.out.println("fim do ciclo");
 	}
-	
+
 	public boolean isSemaphoreAgent(AID senderAID) {
 		Iterator<AgentTraffi> semaphores = ContextManager.agentTraffiContext.getObjects(Semaphore.class).iterator();
-		
-		while(semaphores.hasNext()) {
+
+		while (semaphores.hasNext()) {
 			Semaphore s = (Semaphore) semaphores.next();
-			
-			if(s.getAID().equals(senderAID))
+
+			if (s.getAID().equals(senderAID))
 				return true;
 		}
 		return false;
 	}
-	
+
 	public boolean isRadioAgent(AID senderAID) {
 		Iterator<AgentTraffi> radios = ContextManager.agentTraffiContext.getObjects(Radio.class).iterator();
-		
-		while(radios.hasNext()) {
+
+		while (radios.hasNext()) {
 			Radio r = (Radio) radios.next();
-			
-			if(r.getAID().equals(senderAID))
+
+			if (r.getAID().equals(senderAID))
 				return true;
 		}
 		return false;

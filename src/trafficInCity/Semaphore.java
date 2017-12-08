@@ -11,16 +11,16 @@ import main.ContextManager;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.gis.Geography;
 
-public class Semaphore extends AgentTraffi{
+public class Semaphore extends AgentTraffi {
 	protected Geography<? extends AgentTraffi> space;
 	protected int isGreen;
-	protected int tickChange;	
+	protected int tickChange;
 	protected int actualTick;
 	protected Point pos;
 
 	protected boolean a;
 
-	public Semaphore(Geography<? extends AgentTraffi> space, Point pos,  boolean isGreen, int tickChange) {
+	public Semaphore(Geography<? extends AgentTraffi> space, Point pos, boolean isGreen, int tickChange) {
 		super();
 		this.space = space;
 		this.isGreen = 10;
@@ -29,14 +29,11 @@ public class Semaphore extends AgentTraffi{
 		int act = r.nextInt(tickChange);
 		this.actualTick = act;
 
-		this.pos= pos;
+		this.pos = pos;
 	}
 
 	/*
-	@Override
-	public void setup() {
-		System.out.println("Oi, sou o sem�foro");
-	}
+	 * @Override public void setup() { System.out.println("Oi, sou o sem�foro"); }
 	 */
 	public int isSemaphoreGreen() {
 		return isGreen;
@@ -52,9 +49,9 @@ public class Semaphore extends AgentTraffi{
 
 		Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(Car.class).iterator();
 		Coordinate pos = ContextManager.agentTraffiProjection.getGeometry(this).getCoordinate();
-		String msg =  pos.x + "%" + pos.y + "%" + isGreen;
+		String msg = pos.x + "%" + pos.y + "%" + isGreen;
 
-		while(cars.hasNext()) {
+		while (cars.hasNext()) {
 			Car c = (Car) cars.next();
 
 			AID receiver = (AID) c.getAID();

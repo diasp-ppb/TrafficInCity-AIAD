@@ -10,11 +10,10 @@ import javafx.util.Pair;
 import main.ContextManager;
 import repast.simphony.engine.schedule.ScheduledMethod;
 
-
-public class Radio extends AgentTraffi{
+public class Radio extends AgentTraffi {
 	private RoadTrafficIntensity carTrafficInfo;
 
-	public Radio () {
+	public Radio() {
 		carTrafficInfo = new RoadTrafficIntensity();
 	}
 
@@ -24,41 +23,40 @@ public class Radio extends AgentTraffi{
 
 		int load;
 
-		while(roads.hasNext()) {
+		while (roads.hasNext()) {
 			load = 0;
 
-			Road current =  roads.next();
+			Road current = roads.next();
 			Junction source = current.getJunctions().get(0);
 			Junction target = current.getJunctions().get(1);
 
-			
-		    load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source, target));
-		    load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source, target));
-			 
+			load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source, target));
+			// load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source,
+			// target));
+
 			current.setLoad(load);
 		}
-		
-			Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(LowestTrafficCar.class).iterator();
-			String msg = generateMessage();
-			//System.out.println(msg);
-			while(cars.hasNext()) {
-				Car c = (Car) cars.next();
-				
-				AID receiver = (AID) c.getAID();
-				sendMessage(receiver, msg);
-			}
+
+		Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(LowestTrafficCar.class).iterator();
+		String msg = generateMessage();
+		// System.out.println(msg);
+		while (cars.hasNext()) {
+			Car c = (Car) cars.next();
+
+			AID receiver = (AID) c.getAID();
+			sendMessage(receiver, msg);
+		}
 	}
-	
+
 	private String generateMessage() {
 		return carTrafficInfo.data();
 	}
-	
-	
-	public synchronized void addIndexjunctionsCars(Pair<Junction,Junction> road) {
+
+	public synchronized void addIndexjunctionsCars(Pair<Junction, Junction> road) {
 		carTrafficInfo.addIndexjunctionsCars(road);
 	}
-	
-	public synchronized void subIndexjunctionsCars(Pair<Junction,Junction> road) {
+
+	public synchronized void subIndexjunctionsCars(Pair<Junction, Junction> road) {
 		carTrafficInfo.subIndexjunctionsCars(road);
 	}
 }

@@ -37,49 +37,43 @@ public class ShortestPathCar extends Car {
 		move = true;
 	}
 
-
 	@ScheduledMethod(start = 1, interval = 1)
 	public void move() {
-		
-		
 
 		ACLMessage msg = receive();
-		outerloop:
-		while(msg!=null) {
-			if(isSemaphoreAgent(msg.getSender())) {
+		outerloop: while (msg != null) {
+			if (isSemaphoreAgent(msg.getSender())) {
 				Coordinate coordinate;
 				boolean isGreen;
-				
+
 				String message = msg.getContent();
 				String[] strings = message.split("%");
-				
-				if(strings.length == 3) {
+
+				if (strings.length == 3) {
 					coordinate = new Coordinate(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
 					isGreen = (Integer.parseInt(strings[2]) == 0);
-				}
-				else
+				} else
 					break;
-				
+
 				Point p = ContextManager.GF.createPoint(coordinate);
-			
-				if(ContextManager.agentTraffiProjection.getGeometry(this).getCentroid().distance(p) < 0.00001) {
+
+				if (ContextManager.agentTraffiProjection.getGeometry(this).getCentroid().distance(p) < 0.00001) {
 					move = isGreen;
 					if (!isGreen) {
 						break outerloop;
 					}
 				}
 			}
-			
+
 			msg = receive();
 		}
 
-		
 		if ((atualIndex < route.size() - 1) && move) {
-			
+
 			Vector<Coordinate> coordsJuntion = route.get(atualIndex).getValue();
 
 			if (atualIndexInJunction < coordsJuntion.size()) {
-				//System.out.println(ContextManager.carsInRoad.numberCars());
+				// System.out.println(ContextManager.carsInRoad.numberCars());
 
 				Coordinate point = coordsJuntion.get(atualIndexInJunction);
 
@@ -103,29 +97,30 @@ public class ShortestPathCar extends Car {
 
 						Junction oldsourceJunction = route.get(atualIndex).getKey();
 						Junction oldtargetJunction = route.get(atualIndex + 1).getKey();
-						
-						Iterator<AgentTraffi> radios = ContextManager.agentTraffiContext.getObjects(Radio.class).iterator();
-						
-						if(radios.hasNext()) {
-							Radio radio = (Radio)radios.next();
-							radio.subIndexjunctionsCars(new Pair<Junction,Junction> (oldsourceJunction,oldtargetJunction));
-						}
-							
-						
 
+						Iterator<AgentTraffi> radios = ContextManager.agentTraffiContext.getObjects(Radio.class)
+								.iterator();
+
+						if (radios.hasNext()) {
+							Radio radio = (Radio) radios.next();
+							radio.subIndexjunctionsCars(
+									new Pair<Junction, Junction>(oldsourceJunction, oldtargetJunction));
+						}
 
 						atualIndex++;
 						atualIndexInJunction = 0;
 
-						if(atualIndex < route.size() - 1 ) {
+						if (atualIndex < route.size() - 1) {
 							Junction newsourceJunction = route.get(atualIndex).getKey();
-							Junction newtargetJunction = route.get(atualIndex +1).getKey();
-							
-							Iterator<AgentTraffi> radiosAtual = ContextManager.agentTraffiContext.getObjects(Radio.class).iterator();
-							
-							if(radiosAtual.hasNext()) {
-								Radio radioAtual = (Radio)radiosAtual.next();
-								radioAtual.addIndexjunctionsCars(new Pair<Junction,Junction> (newsourceJunction,newtargetJunction));
+							Junction newtargetJunction = route.get(atualIndex + 1).getKey();
+
+							Iterator<AgentTraffi> radiosAtual = ContextManager.agentTraffiContext
+									.getObjects(Radio.class).iterator();
+
+							if (radiosAtual.hasNext()) {
+								Radio radioAtual = (Radio) radiosAtual.next();
+								radioAtual.addIndexjunctionsCars(
+										new Pair<Junction, Junction>(newsourceJunction, newtargetJunction));
 							}
 						}
 					} else
@@ -251,8 +246,6 @@ public class ShortestPathCar extends Car {
 
 	public void runDiskj() {
 
-
-
 		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
 
@@ -261,8 +254,6 @@ public class ShortestPathCar extends Car {
 
 		Junction actJunction = ContextManager.getJunction(i);
 		Junction finalJunction = ContextManager.getJunction(f);
-
-
 
 		PriorityQueue<Junction> queue = new PriorityQueue<Junction>(1000);
 
@@ -327,12 +318,12 @@ public class ShortestPathCar extends Car {
 	public void defineRoute(List<Junction> junctions) {
 
 		Iterator<AgentTraffi> radios = ContextManager.agentTraffiContext.getObjects(Radio.class).iterator();
-		
-		if(radios.hasNext() && junctions.size() >= 2) {
-			Radio radio = (Radio)radios.next();
-			radio.addIndexjunctionsCars(new Pair<Junction,Junction> (junctions.get(0), junctions.get(1)));
+
+		if (radios.hasNext() && junctions.size() >= 2) {
+			Radio radio = (Radio) radios.next();
+			radio.addIndexjunctionsCars(new Pair<Junction, Junction>(junctions.get(0), junctions.get(1)));
 		}
-		
+
 		for (int i = 1; i < junctions.size(); i++) {
 			Vector<Coordinate> coordsRoad = new Vector<Coordinate>();
 			Iterator<Road> roads = ContextManager.roadContext.getObjects(Road.class).iterator();
@@ -361,7 +352,7 @@ public class ShortestPathCar extends Car {
 		route.add(
 				new Pair<Junction, Vector<Coordinate>>(junctions.get(junctions.size() - 1), new Vector<Coordinate>()));
 	}
-	
+
 	public double getDistance(Coordinate a1, Coordinate a2) {
 		return Math.sqrt(Math.pow((a2.x - a1.x), 2) + Math.pow((a2.y - a1.y), 2));
 	}

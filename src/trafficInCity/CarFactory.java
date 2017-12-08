@@ -11,38 +11,41 @@ import repast.simphony.space.gis.Geography;
 
 public class CarFactory {
 	public void createAgents(Context<AgentTraffi> carContext, Geography<AgentTraffi> carProjection) {
-		int numShortestPathCars = 10;
+		int numShortestPathCars = 30;
 		Random rand = new Random();
 
-		for(int i = 0; i < numShortestPathCars; i++) {
+		for (int i = 0; i < numShortestPathCars; i++) {
 
 			Junction finalJunction = ContextManager.junctionContext.getRandomObject();
-			ShortestPathCar car = new ShortestPathCar(carProjection, ContextManager.junctionProjection.getGeometry(finalJunction).getCentroid());
+			ShortestPathCar car = new ShortestPathCar(carProjection,
+					ContextManager.junctionProjection.getGeometry(finalJunction).getCentroid());
 			ContextManager.addCarToContext(car);
 			Junction nextRoad = ContextManager.junctionContext.getRandomObject();
 			ContextManager.moveAgent(car, ContextManager.junctionProjection.getGeometry(nextRoad).getCentroid());
 			car.runDiskj();
 
 			try {
-				ContextManager.mainContainer.acceptNewAgent("SPCar"+rand.nextInt(Integer.MAX_VALUE), car).start();
+				ContextManager.mainContainer.acceptNewAgent("SPCar" + rand.nextInt(Integer.MAX_VALUE), car).start();
 			} catch (StaleProxyException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		int numLowesttrafficCars = 10;
 
-		for(int i = 0; i < numLowesttrafficCars; i++) {
+		int numLowesttrafficCars = 1;
+
+		for (int i = 0; i < numLowesttrafficCars; i++) {
 
 			Junction finalJunction = ContextManager.junctionContext.getRandomObject();
-			LowestTrafficCar car = new LowestTrafficCar(carProjection, ContextManager.junctionProjection.getGeometry(finalJunction).getCentroid());
+			LowestTrafficCar car = new LowestTrafficCar(carProjection,
+					ContextManager.junctionProjection.getGeometry(finalJunction).getCentroid());
 			ContextManager.addCarToContext(car);
+			car.setIndex(i);
 			Junction nextRoad = ContextManager.junctionContext.getRandomObject();
 			ContextManager.moveAgent(car, ContextManager.junctionProjection.getGeometry(nextRoad).getCentroid());
 			car.runDiskj();
 
 			try {
-				ContextManager.mainContainer.acceptNewAgent("SPCar"+rand.nextInt(Integer.MAX_VALUE), car).start();
+				ContextManager.mainContainer.acceptNewAgent("SPCar" + rand.nextInt(Integer.MAX_VALUE), car).start();
 			} catch (StaleProxyException e) {
 				e.printStackTrace();
 			}

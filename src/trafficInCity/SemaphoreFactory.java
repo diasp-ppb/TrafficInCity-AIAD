@@ -17,23 +17,25 @@ public class SemaphoreFactory {
 		int numSemaphors = 15;
 		Random rand = new Random();
 
-		for(int i = 0; i < numSemaphors; i++) {
-			
+		for (int i = 0; i < numSemaphors; i++) {
+
 			Junction junction = ContextManager.junctionContext.getRandomObject();
-			Semaphore semaphore = new Semaphore(semaphoreProjection, ContextManager.junctionProjection.getGeometry(junction).getCentroid(), true, 1000);
+			Semaphore semaphore = new Semaphore(semaphoreProjection,
+					ContextManager.junctionProjection.getGeometry(junction).getCentroid(), true, 1000);
 			ContextManager.addSemaphoreToContext(semaphore);
-			ContextManager.moveSemaphoreToPlace(semaphore, ContextManager.junctionProjection.getGeometry(junction).getCentroid());	
+			ContextManager.moveSemaphoreToPlace(semaphore,
+					ContextManager.junctionProjection.getGeometry(junction).getCentroid());
 			locationSemaphors.add(junction);
 
 			try {
-				ContextManager.mainContainer.acceptNewAgent("SPSemaphore"+rand.nextInt(Integer.MAX_VALUE), semaphore).start();
+				ContextManager.mainContainer.acceptNewAgent("SPSemaphore" + rand.nextInt(Integer.MAX_VALUE), semaphore)
+						.start();
 			} catch (StaleProxyException e) {
 				e.printStackTrace();
 			}
 		}
 
 	}
-
 
 	public ArrayList<Junction> getLocationSemaphors() {
 		return locationSemaphors;
