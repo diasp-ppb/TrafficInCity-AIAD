@@ -64,8 +64,31 @@ public class RoadTrafficIntensity {
 		
 		while(dataStorage.hasNext()) {
 			Entry<Pair<Junction,Junction>, Integer> dataStatus = dataStorage.next();
-			data += "<" + dataStatus.getKey().getKey() +","+ dataStatus.getKey().getValue() +","+ dataStatus.getValue() +">";
+			data += dataStatus.getKey().getKey() +","+ dataStatus.getKey().getValue() +","+ dataStatus.getValue()+"%";
 		}
 		return data;
+	}
+	
+	public void updateRoad(String junc1, String junc2, int load) {
+		Iterator<Junction> junctions = ContextManager.junctionContext.getObjects(Junction.class).iterator();
+		
+		Junction n1 = null, n2 = null;
+		boolean f1 = false, f2 = false;
+		
+		while((!f1 || !f2) && junctions.hasNext()) {
+			Junction current =  junctions.next();
+			if((current.toString()).equals(junc1)) {
+				n1 = current;
+				f1 = true;
+			}
+			else if((current.toString()).equals(junc2)) {
+				n2 = current;
+				f2 = true;
+			}
+		}
+		
+		if(f1 && f2) {
+			carsInRoad.put(new Pair<Junction,Junction>(n1,n2), load);
+		}
 	}
 }

@@ -24,12 +24,14 @@ public class LowestTrafficCar extends Car {
 	private int atualIndex;
 	private List<Pair<Junction, Vector<Coordinate>>> route;
 	private boolean move;
+	private RoadTrafficIntensity roadsInfo;
 
 	public LowestTrafficCar(Geography<? extends AgentTraffi> space, Point finalPos) {
 		super(space, finalPos);
 		atualIndexInJunction = 0;
 		atualIndex = 0;
 		route = new ArrayList<Pair<Junction, Vector<Coordinate>>>();
+		roadsInfo = new RoadTrafficIntensity(); 
 		move = true;
 	}
 	
@@ -37,7 +39,7 @@ public class LowestTrafficCar extends Car {
 	public void move() {
 
 		ACLMessage msg = receive();
-		outerloop:
+		
 		while(msg!=null) {
 			if(isSemaphoreAgent(msg.getSender())) {
 				Coordinate coordinate;
@@ -57,14 +59,30 @@ public class LowestTrafficCar extends Car {
 			
 				if(ContextManager.agentTraffiProjection.getGeometry(this).getCentroid().distance(p) < 0.00001) {
 					move = isGreen;
-					if (!isGreen) {
-						break outerloop;
+				}
+			}
+			else if(isRadioAgent(msg.getSender())) {
+
+				String[] parsedMessage = msg.getContent().split(":");
+		
+				if(parsedMessage.length > 0) {
+					if(parsedMessage[0].equals("TRAFFIC INFO")) {
+						String [] roads = parsedMessage[1].split("%");
+						
+						for(int i = 0; i < roads.length; i++) {
+							String [] junctions = roads[i].split(",");
+							if(junctions.length == 3) {
+								roadsInfo.updateRoad(junctions[0],junctions[1],Integer.parseInt(junctions[2]));
+							}	
+						}
 					}
 				}
 			}
 			
 			msg = receive();
+		
 		}
+ 		
 
 		if (atualIndex < route.size() - 1 && move) {
 

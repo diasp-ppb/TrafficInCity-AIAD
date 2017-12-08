@@ -35,7 +35,7 @@ public class Semaphore extends AgentTraffi{
 	/*
 	@Override
 	public void setup() {
-		System.out.println("Oi, sou o semáforo");
+		System.out.println("Oi, sou o semï¿½foro");
 	}
 	 */
 	public int isSemaphoreGreen() {

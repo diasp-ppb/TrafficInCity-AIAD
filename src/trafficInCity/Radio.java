@@ -38,9 +38,9 @@ public class Radio extends AgentTraffi{
 			current.setLoad(load);
 		}
 		
-			Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(Car.class).iterator();
+			Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(LowestTrafficCar.class).iterator();
 			String msg = generateMessage();
-			
+			//System.out.println(msg);
 			while(cars.hasNext()) {
 				Car c = (Car) cars.next();
 				
