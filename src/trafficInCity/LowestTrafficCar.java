@@ -23,23 +23,50 @@ public class LowestTrafficCar extends Car {
 	private int atualIndexInJunction;
 	private int atualIndex;
 	private List<Pair<Junction, Vector<Coordinate>>> route;
+	private boolean move;
 
 	public LowestTrafficCar(Geography<? extends AgentTraffi> space, Point finalPos) {
 		super(space, finalPos);
 		atualIndexInJunction = 0;
 		atualIndex = 0;
 		route = new ArrayList<Pair<Junction, Vector<Coordinate>>>();
+		move = true;
 	}
 	
 	@ScheduledMethod(start = 1, interval = 1)
 	public void move() {
 
 		ACLMessage msg = receive();
+		outerloop:
 		while(msg!=null) {
+			if(isSemaphoreAgent(msg.getSender())) {
+				Coordinate coordinate;
+				boolean isGreen;
+				
+				String message = msg.getContent();
+				String[] strings = message.split("%");
+				
+				if(strings.length == 3) {
+					coordinate = new Coordinate(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
+					isGreen = (Integer.parseInt(strings[2]) == 0);
+				}
+				else
+					break;
+				
+				Point p = ContextManager.GF.createPoint(coordinate);
+			
+				if(ContextManager.agentTraffiProjection.getGeometry(this).getCentroid().distance(p) < 0.00001) {
+					move = isGreen;
+					if (!isGreen) {
+						break outerloop;
+					}
+				}
+			}
+			
 			msg = receive();
 		}
 
-		if (atualIndex < route.size() - 1) {
+		if (atualIndex < route.size() - 1 && move) {
 
 			Vector<Coordinate> coordsJuntion = route.get(atualIndex).getValue();
 
@@ -57,7 +84,7 @@ public class LowestTrafficCar extends Car {
 				ang = (Math.PI * 2) - ang;
 
 				// System.out.println(ang);
-				ContextManager.moveAgentByVector(this, 0.0001 * ContextManager.agentTraffiContext.size(), ang);
+				ContextManager.moveAgentByVector(this, 0.00003 * ContextManager.agentTraffiContext.size(), ang);
 
 				int angl = (int) (ang * 10000);
 				int pi = (int) (Math.PI * 10000);
