@@ -22,7 +22,8 @@ public class Road implements FixedGeography, Identified {
 	private NetworkEdge<Junction> edge;
 	private String name;
 	private int load;
-	private boolean majorRoad = false;
+	private int passed;
+	
 	public static Road nullRoad;
 	static {
 		Road.nullRoad = new Road();
@@ -37,6 +38,7 @@ public class Road implements FixedGeography, Identified {
 	public Road() {
 		this.junctions = new ArrayList<Junction>();
 		this.load = 0;
+		this.passed = 0;
 	}
 
 	public void initialise() throws NoIdentifierException {
@@ -52,10 +54,17 @@ public class Road implements FixedGeography, Identified {
 	public void setLoad(int load) {
 		this.load = load;
 	}
-
-	public boolean isMajorRoad() {
-		return this.majorRoad;
+	
+	public int getPassed() {
+		return this.passed;
 	}
+	
+	public void setPassed(int passed) {
+		this.passed = passed;
+	}
+
+	
+	
 
 	@Override
 	public String toString() {
