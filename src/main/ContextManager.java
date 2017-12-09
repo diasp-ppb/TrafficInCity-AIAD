@@ -54,7 +54,7 @@ public class ContextManager implements ContextBuilder<Object> {
 	public static Geography<Junction> junctionProjection;
 	public static Network<Junction> streetNetwork;
 
-	public static ArrayList<Junction> locationSemaphors;
+	public ArrayList<Junction> locationSemaphors;
 
 	public static GeometryFactory GF = new GeometryFactory();
 

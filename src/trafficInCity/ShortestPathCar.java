@@ -5,11 +5,8 @@ import main.ContextManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Stack;
 import java.util.Vector;
 
 import com.vividsolutions.jts.geom.Coordinate;

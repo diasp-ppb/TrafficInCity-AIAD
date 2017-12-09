@@ -1,6 +1,7 @@
 package trafficInCity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import environment.Junction;
@@ -16,10 +17,12 @@ public class SemaphoreFactory {
 	public void createAgents(Context<AgentTraffi> semaphoreContext, Geography<AgentTraffi> semaphoreProjection) {
 		int numSemaphors = 15;
 		Random rand = new Random();
-
+		
+		Iterator<Junction> junctions = ContextManager.junctionContext.getRandomObjects(Junction.class,numSemaphors).iterator();
+		
 		for (int i = 0; i < numSemaphors; i++) {
 
-			Junction junction = ContextManager.junctionContext.getRandomObject();
+			Junction junction = junctions.next();
 			Semaphore semaphore = new Semaphore(semaphoreProjection,
 					ContextManager.junctionProjection.getGeometry(junction).getCentroid(), true, 1000);
 			ContextManager.addSemaphoreToContext(semaphore);

@@ -5,7 +5,6 @@ import java.util.Iterator;
 import environment.Junction;
 import environment.Road;
 import jade.core.AID;
-import jade.lang.acl.ACLMessage;
 import javafx.util.Pair;
 import main.ContextManager;
 import repast.simphony.engine.schedule.ScheduledMethod;
