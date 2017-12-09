@@ -37,6 +37,19 @@ public class ShortestPathCar extends Car {
 		move = true;
 	}
 
+	public double angleTrajectory(Coordinate point) {
+
+		double lon = (point.y - actualPos().getY());
+		double dx = Math.cos(actualPos().getX()) * Math.sin(point.x)
+				- Math.sin(actualPos().getX()) * Math.cos(point.x) * Math.cos(lon);
+		double dy = Math.sin(lon) * Math.cos(point.y);
+		double ang = Math.atan2(dy, dx);
+
+		ang = ((Math.PI * 2) + ang) % (Math.PI * 2);
+		ang = (Math.PI * 2) - ang;
+		return ang;
+	}
+
 	@ScheduledMethod(start = 1, interval = 1)
 	public void move() {
 
@@ -64,7 +77,6 @@ public class ShortestPathCar extends Car {
 					}
 				}
 			}
-
 			msg = receive();
 		}
 
@@ -73,19 +85,9 @@ public class ShortestPathCar extends Car {
 			Vector<Coordinate> coordsJuntion = route.get(atualIndex).getValue();
 
 			if (atualIndexInJunction < coordsJuntion.size()) {
-				// System.out.println(ContextManager.carsInRoad.numberCars());
 
 				Coordinate point = coordsJuntion.get(atualIndexInJunction);
-
-				double lon = (point.y - actualPos().getY());
-				double dx = Math.cos(actualPos().getX()) * Math.sin(point.x)
-						- Math.sin(actualPos().getX()) * Math.cos(point.x) * Math.cos(lon);
-				double dy = Math.sin(lon) * Math.cos(point.y);
-				double ang = Math.atan2(dy, dx);
-
-				ang = ((Math.PI * 2) + ang) % (Math.PI * 2);
-				ang = (Math.PI * 2) - ang;
-
+				double ang = this.angleTrajectory(point);
 				ContextManager.moveAgentByVector(this, 0.00003 * ContextManager.agentTraffiContext.size(), ang);
 
 				int angl = (int) (ang * 10000);
@@ -125,7 +127,6 @@ public class ShortestPathCar extends Car {
 						}
 					} else
 						atualIndexInJunction++;
-
 				}
 			}
 		}
@@ -256,7 +257,6 @@ public class ShortestPathCar extends Car {
 		Junction finalJunction = ContextManager.getJunction(f);
 
 		PriorityQueue<Junction> queue = new PriorityQueue<Junction>(1000);
-
 		ArrayList<Junction> shortestPathList = new ArrayList<Junction>();
 
 		resetWeightInJunctions();
@@ -277,13 +277,12 @@ public class ShortestPathCar extends Car {
 					n.setNodeWeight(newWeight);
 					n.setPreviousNode(j);
 					queue.add(n);
-
 				}
 			}
 		}
-
 		Junction crawler = finalJunction;
 		shortestPathList.add(finalJunction);
+
 		while (!crawler.equals(actJunction)) {
 			shortestPathList.add(crawler.getPreviousNode());
 			crawler = crawler.getPreviousNode();
@@ -291,11 +290,11 @@ public class ShortestPathCar extends Car {
 
 		Collections.reverse(shortestPathList);
 		defineRoute(shortestPathList);
-
 	}
 
 	public double getRoadWeight(Junction n1, Junction n2) {
 		List<Road> connections = n1.getRoads();
+
 		for (int i = 0; i < connections.size(); i++) {
 			Road road = connections.get(i);
 			ArrayList<Junction> current = road.getJunctions();

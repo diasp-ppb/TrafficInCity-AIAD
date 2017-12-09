@@ -32,9 +32,6 @@ public class Semaphore extends AgentTraffi {
 		this.pos = pos;
 	}
 
-	/*
-	 * @Override public void setup() { System.out.println("Oi, sou o sem�foro"); }
-	 */
 	public int isSemaphoreGreen() {
 		return isGreen;
 	}
@@ -57,7 +54,6 @@ public class Semaphore extends AgentTraffi {
 			AID receiver = (AID) c.getAID();
 			sendMessage(receiver, msg);
 		}
-
 	}
 
 	public void verifySemaphoreColor() {

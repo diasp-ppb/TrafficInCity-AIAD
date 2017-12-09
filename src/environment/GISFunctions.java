@@ -16,12 +16,8 @@ import repast.simphony.space.gis.Geography;
 import repast.simphony.space.gis.ShapefileLoader;
 import repast.simphony.space.graph.Network;
 
-
-
 public class GISFunctions {
 
-
-	
 	public static void buildGISRoadNetwork(Geography<Road> roadGeography, Context<Junction> junctionContext,
 			Geography<Junction> junctionGeography, Network<Junction> roadNetwork) {
 
@@ -48,7 +44,7 @@ public class GISFunctions {
 			}
 			if (coordMap.containsKey(c2)) {
 				junc2 = coordMap.get(c2);
-			} else { 
+			} else {
 				junc2 = new Junction();
 				junc2.setCoords(c2);
 				junctionContext.add(junc2);
@@ -62,7 +58,7 @@ public class GISFunctions {
 			junc2.addRoad(road);
 
 			NetworkEdge<Junction> edge = new NetworkEdge<Junction>(junc1, junc2, false, roadGeom.getLength());
-			
+
 			road.setEdge(edge);
 			edge.setRoad(road);
 
@@ -70,13 +66,11 @@ public class GISFunctions {
 				roadNetwork.addEdge(edge);
 			} else {
 				System.out.println("buildRoadNetwork: for some reason this edge that has just been created "
-			                    	+ "already exists in the RoadNetwork.");
+						+ "already exists in the RoadNetwork.");
 			}
-
 		}
 	}
 
-	
 	public static <T extends FixedGeography> void readShapefile(Class<T> cl, String shapefileLocation,
 			Geography<T> geog, Context<T> context) throws MalformedURLException, FileNotFoundException {
 		File shapefile = null;
@@ -94,5 +88,3 @@ public class GISFunctions {
 		}
 	}
 }
-
-  

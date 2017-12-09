@@ -29,13 +29,10 @@ public class RoadTrafficIntensity {
 
 	public synchronized void addIndexjunctionsCars(Pair<Junction, Junction> road) {
 		carsInRoad.put(road, carsInRoad.get(road) + 1);
-		// System.out.println(road + " +1" );
-
 	}
 
 	public synchronized void subIndexjunctionsCars(Pair<Junction, Junction> road) {
 		carsInRoad.put(road, carsInRoad.get(road) - 1);
-		// System.out.println(road + " -1" );
 	}
 
 	public HashMap<Pair<Junction, Junction>, Integer> getCarsInRoad() {

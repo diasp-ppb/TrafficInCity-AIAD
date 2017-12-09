@@ -33,16 +33,12 @@ public class Car extends AgentTraffi {
 	public void moveAgentInStreet() {
 		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
-		System.out.println("Actual: " + i);
-		System.out.println("Final: " + f);
 
 		if (i.equals(f)) {
 			return;
 		}
 
 		Junction actJunction = ContextManager.getJunction(i);
-		// Junction finalJunction = ContextManager.getJunction(f);
-
 		Iterator<Junction> successors = ContextManager.streetNetwork.getSuccessors(actJunction).iterator();
 
 		// reach destination
@@ -55,15 +51,11 @@ public class Car extends AgentTraffi {
 			Junction j = successors.next();
 			if (j.getCoords().equals(f)) {
 				ContextManager.moveAgent(this, ContextManager.junctionProjection.getGeometry(j).getCentroid());
-				System.out.println("Final---: " + this.actualPos());
 				return;
 			}
-
 			ContextManager.moveAgent(this, ContextManager.junctionProjection.getGeometry(j).getCentroid());
-			System.out.println("Actual: " + this.actualPos());
 		}
 
-		System.out.println("fim do ciclo");
 	}
 
 	public boolean isSemaphoreAgent(AID senderAID) {
@@ -89,5 +81,4 @@ public class Car extends AgentTraffi {
 		}
 		return false;
 	}
-
 }

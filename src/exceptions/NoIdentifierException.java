@@ -6,5 +6,5 @@ public class NoIdentifierException extends Exception {
 
 	public NoIdentifierException(String message) {
 		super(message);
-	}	
+	}
 }

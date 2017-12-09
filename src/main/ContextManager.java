@@ -41,7 +41,7 @@ import jade.core.ProfileImpl;
 public class ContextManager implements ContextBuilder<Object> {
 
 	private static Context<Object> mainContext;
-	
+
 	public static ContainerController mainContainer;
 
 	public static Context<Road> roadContext;
@@ -66,13 +66,13 @@ public class ContextManager implements ContextBuilder<Object> {
 
 		mainContext = con;
 		mainContext.setId("mainContext");
-		
-		if(!contextLaunched) {
+
+		if (!contextLaunched) {
 			Runtime rt = Runtime.instance();
-			 Profile p1 = new ProfileImpl();
-			 mainContainer = rt.createMainContainer(p1);
-			 
-			 contextLaunched = true;
+			Profile p1 = new ProfileImpl();
+			mainContainer = rt.createMainContainer(p1);
+
+			contextLaunched = true;
 		}
 
 		try {
@@ -81,7 +81,6 @@ public class ContextManager implements ContextBuilder<Object> {
 			createJunctions();
 			createNetWork();
 
-			//createCarContext();
 			createAgentsContext();
 
 		} catch (MalformedURLException | FileNotFoundException e) {
@@ -120,26 +119,24 @@ public class ContextManager implements ContextBuilder<Object> {
 		GISFunctions.buildGISRoadNetwork(roadProjection, junctionContext, junctionProjection, streetNetwork);
 	}
 
-	
 	private void createAgentsContext() {
 		agentTraffiContext = new AgentTraffiContext();
 		mainContext.addSubContext(agentTraffiContext);
-		agentTraffiProjection = GeographyFactoryFinder.createGeographyFactory(null).createGeography("agentTraffiGeography",
-				agentTraffiContext, new GeographyParameters<AgentTraffi>(new SimpleAdder<AgentTraffi>()));
+		agentTraffiProjection = GeographyFactoryFinder.createGeographyFactory(null).createGeography(
+				"agentTraffiGeography", agentTraffiContext,
+				new GeographyParameters<AgentTraffi>(new SimpleAdder<AgentTraffi>()));
 
 		RadioFactory radioFactory = new RadioFactory();
 		radioFactory.createAgents(agentTraffiContext, agentTraffiProjection);
-		
+
 		SemaphoreFactory semaphoreFactory = new SemaphoreFactory();
 		semaphoreFactory.createAgents(agentTraffiContext, agentTraffiProjection);
-		
+
 		CarFactory carFactory = new CarFactory();
 		carFactory.createAgents(agentTraffiContext, agentTraffiProjection);
-		
-		
+
 		this.locationSemaphors = semaphoreFactory.getLocationSemaphors();
 	}
-	
 
 	public static synchronized void addCarToContext(Car car) {
 		ContextManager.agentTraffiContext.add(car);

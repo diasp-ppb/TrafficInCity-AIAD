@@ -20,7 +20,6 @@ public class Radio extends AgentTraffi {
 	@ScheduledMethod(start = 1, interval = 1000)
 	public void updateAllRoadWeight() {
 		Iterator<Road> roads = ContextManager.roadContext.getObjects(Road.class).iterator();
-
 		int load;
 
 		while (roads.hasNext()) {
@@ -31,15 +30,12 @@ public class Radio extends AgentTraffi {
 			Junction target = current.getJunctions().get(1);
 
 			load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source, target));
-			// load = carTrafficInfo.getRoadLoad(new Pair<Junction, Junction>(source,
-			// target));
-
 			current.setLoad(load);
 		}
 
 		Iterator<AgentTraffi> cars = ContextManager.agentTraffiContext.getObjects(LowestTrafficCar.class).iterator();
 		String msg = generateMessage();
-		// System.out.println(msg);
+
 		while (cars.hasNext()) {
 			Car c = (Car) cars.next();
 

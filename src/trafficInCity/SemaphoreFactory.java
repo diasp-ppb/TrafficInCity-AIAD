@@ -34,7 +34,6 @@ public class SemaphoreFactory {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	public ArrayList<Junction> getLocationSemaphors() {
