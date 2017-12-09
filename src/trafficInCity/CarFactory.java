@@ -13,10 +13,13 @@ public class CarFactory {
 	public void createAgents(Context<AgentTraffi> carContext, Geography<AgentTraffi> carProjection) {
 		int numShortestPathCars = 30;
 		Random rand = new Random();
-
+		
+		
+		
+		Junction finalJunction = ContextManager.junctionContext.getRandomObject();
 		for (int i = 0; i < numShortestPathCars; i++) {
 
-			Junction finalJunction = ContextManager.junctionContext.getRandomObject();
+			
 			ShortestPathCar car = new ShortestPathCar(carProjection,
 					ContextManager.junctionProjection.getGeometry(finalJunction).getCentroid());
 			ContextManager.addCarToContext(car);
@@ -35,11 +38,9 @@ public class CarFactory {
 
 		for (int i = 0; i < numLowesttrafficCars; i++) {
 
-			Junction finalJunction = ContextManager.junctionContext.getRandomObject();
 			LowestTrafficCar car = new LowestTrafficCar(carProjection,
 					ContextManager.junctionProjection.getGeometry(finalJunction).getCentroid());
 			ContextManager.addCarToContext(car);
-			car.setIndex(i);
 			Junction nextRoad = ContextManager.junctionContext.getRandomObject();
 			ContextManager.moveAgent(car, ContextManager.junctionProjection.getGeometry(nextRoad).getCentroid());
 			car.runDiskj();

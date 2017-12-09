@@ -64,7 +64,7 @@ public class LowestTrafficCar extends Car {
 
 	@ScheduledMethod(start = 1, interval = 1)
 	public void move() {
-
+		
 		ACLMessage msg = receive();
 
 		while (msg != null) {
@@ -158,14 +158,14 @@ public class LowestTrafficCar extends Car {
 							Iterator<AgentTraffi> radiosAtual = ContextManager.agentTraffiContext
 									.getObjects(Radio.class).iterator();
 
-							/*
-							 * if(radiosAtual.hasNext()) { Radio radioAtual = (Radio)radiosAtual.next();
-							 * radioAtual.addIndexjunctionsCars(new Pair<Junction,Junction>
-							 * (newsourceJunction,newtargetJunction)); }
-							 * 
-							 * if(this.index == 0) { System.out.println(this.route); } this.runDiskj();
-							 * if(this.index == 0) { System.out.println(this.route); }
-							 */
+							
+							  if(radiosAtual.hasNext()) {
+								  Radio radioAtual = (Radio)radiosAtual.next();
+								  radioAtual.addIndexjunctionsCars(new Pair<Junction,Junction> (newsourceJunction,newtargetJunction));
+							  }
+							  
+							 recalculateRoute();
+							 
 						}
 					} else
 						atualIndexInJunction++;
@@ -173,6 +173,11 @@ public class LowestTrafficCar extends Car {
 				}
 			}
 		}
+	}
+	public void recalculateRoute() {
+		this.runDiskj();
+		atualIndex = 0;
+		atualIndexInJunction = 0;
 	}
 
 	public void runDiskj() {
@@ -195,11 +200,9 @@ public class LowestTrafficCar extends Car {
 		Junction finalJunction = ContextManager.getJunction(f);
 
 		PriorityQueue<Junction> queue = new PriorityQueue<Junction>(1000);
-
 		ArrayList<Junction> shortestPathList = new ArrayList<Junction>();
 
 		resetWeightInJunctions();
-
 		actJunction.setNodeWeight(0);
 
 		queue.add(actJunction);
@@ -222,6 +225,7 @@ public class LowestTrafficCar extends Car {
 		}
 
 		Junction crawler = finalJunction;
+		shortestPathList.add(finalJunction);
 		while (!crawler.equals(actJunction)) {
 			shortestPathList.add(crawler.getPreviousNode());
 			crawler = crawler.getPreviousNode();
@@ -239,13 +243,14 @@ public class LowestTrafficCar extends Car {
 			ArrayList<Junction> current = road.getJunctions();
 
 			if (current.contains(n1) && current.contains(n2)) {
-				return road.getEdge().getWeight();
+				double roadLenght = road.getEdge().getWeight();
+				return roadLenght + roadsInfo.getRoadLoad(new Pair<Junction,Junction> (n1,n2))*0.3*roadLenght;
 			}
 		}
 		return Double.MAX_VALUE;
 	}
 
-	public void resetWeightInJunctions() {
+	private void resetWeightInJunctions() {
 		Iterator<Junction> junctions = ContextManager.junctionContext.getObjects(Junction.class).iterator();
 
 		while (junctions.hasNext()) {

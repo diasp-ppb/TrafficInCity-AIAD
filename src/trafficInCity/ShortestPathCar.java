@@ -283,6 +283,7 @@ public class ShortestPathCar extends Car {
 		}
 
 		Junction crawler = finalJunction;
+		shortestPathList.add(finalJunction);
 		while (!crawler.equals(actJunction)) {
 			shortestPathList.add(crawler.getPreviousNode());
 			crawler = crawler.getPreviousNode();
