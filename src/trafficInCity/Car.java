@@ -1,50 +1,84 @@
 package trafficInCity;
 
-import java.io.Serializable;
+import java.util.Iterator;
 
-import repast.simphony.space.SpatialMath;
-import repast.simphony.space.continuous.ContinuousSpace;
-import repast.simphony.space.continuous.NdPoint;
-import repast.simphony.space.grid.Grid;
-import sajas.core.Agent;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Point;
 
-public class Car extends Agent{
-	protected ContinuousSpace<Object> space;
-	protected Grid<Object> grid;
-	protected NdPoint initialPos;
-	protected NdPoint finalPos;
-	
-	public Car(ContinuousSpace<Object> space, Grid<Object> grid, NdPoint finalPos) {
+import environment.Junction;
+import jade.core.AID;
+import javafx.util.Pair;
+import main.ContextManager;
+import repast.simphony.space.gis.Geography;
+
+public class Car extends AgentTraffi {
+	protected Geography<? extends AgentTraffi> space;
+	protected Point finalPos;
+	protected Pair<Junction, Junction> roadDirection;
+
+	public Car(Geography<? extends AgentTraffi> space, Point finalPos) {
+		super();
 		this.space = space;
-		this.grid = grid;
 		this.finalPos = finalPos;
 	}
-	
-	public void initiatePos(NdPoint initialPos) {
-		this.initialPos = initialPos;
+
+	public Point getFinalPos() {
+		return finalPos;
 	}
-	
-	public NdPoint getInitialPos() {
-		return initialPos;
+
+	public Point actualPos() {
+		return space.getGeometry(this).getCentroid();
 	}
-	
-	public NdPoint getFinalPos() {
-		return initialPos;
+
+	public void moveAgentInStreet() {
+		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
+		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
+
+		if (i.equals(f)) {
+			return;
+		}
+
+		Junction actJunction = ContextManager.getJunction(i);
+		Iterator<Junction> successors = ContextManager.streetNetwork.getSuccessors(actJunction).iterator();
+
+		// reach destination
+		if (!successors.hasNext()) {
+			System.out.println("Exit");
+			return;
+		}
+
+		while (successors.hasNext()) {
+			Junction j = successors.next();
+			if (j.getCoords().equals(f)) {
+				ContextManager.moveAgent(this, ContextManager.junctionProjection.getGeometry(j).getCentroid());
+				return;
+			}
+			ContextManager.moveAgent(this, ContextManager.junctionProjection.getGeometry(j).getCentroid());
+		}
+
 	}
-	
-	public NdPoint actualPos() {
-		return space.getLocation(this);
+
+	public boolean isSemaphoreAgent(AID senderAID) {
+		Iterator<AgentTraffi> semaphores = ContextManager.agentTraffiContext.getObjects(Semaphore.class).iterator();
+
+		while (semaphores.hasNext()) {
+			Semaphore s = (Semaphore) semaphores.next();
+
+			if (s.getAID().equals(senderAID))
+				return true;
+		}
+		return false;
 	}
-	
-	public void updatePos(NdPoint newPos) {
-		int[] pos = {(int) newPos.getX(), (int) newPos.getY()};
-		grid.moveTo(this, pos);
-	}
-	
-	public void moveInSpace() {
-		NdPoint actualPos = space.getLocation(this);
-		NdPoint nextPos = new NdPoint(grid.getLocation(this).getX(), grid.getLocation(this).getY());
-		double angle = SpatialMath.calcAngleFor2DMovement(this.space, actualPos, nextPos);
-		this.space.moveByVector(this, 1, angle, 0);
+
+	public boolean isRadioAgent(AID senderAID) {
+		Iterator<AgentTraffi> radios = ContextManager.agentTraffiContext.getObjects(Radio.class).iterator();
+
+		while (radios.hasNext()) {
+			Radio r = (Radio) radios.next();
+
+			if (r.getAID().equals(senderAID))
+				return true;
+		}
+		return false;
 	}
 }

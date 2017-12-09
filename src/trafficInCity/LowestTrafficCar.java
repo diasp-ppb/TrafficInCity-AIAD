@@ -1,15 +1,10 @@
 package trafficInCity;
 
-import main.ContextManager;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Stack;
 import java.util.Vector;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -19,22 +14,41 @@ import environment.Junction;
 import environment.Road;
 import jade.lang.acl.ACLMessage;
 import javafx.util.Pair;
+import main.ContextManager;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.gis.Geography;
 
-public class ShortestPathCar extends Car {
+public class LowestTrafficCar extends Car {
 
 	private int atualIndexInJunction;
 	private int atualIndex;
 	private List<Pair<Junction, Vector<Coordinate>>> route;
 	private boolean move;
+	private RoadTrafficIntensity roadsInfo;
+	private int index;
+	List<Junction> semaphores;
 
-	public ShortestPathCar(Geography<? extends AgentTraffi> space, Point finalPos) {
+	public LowestTrafficCar(Geography<? extends AgentTraffi> space, Point finalPos) {
 		super(space, finalPos);
 		atualIndexInJunction = 0;
 		atualIndex = 0;
 		route = new ArrayList<Pair<Junction, Vector<Coordinate>>>();
+		roadsInfo = new RoadTrafficIntensity();
 		move = true;
+		semaphores = new ArrayList<Junction>();
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public void resetroute() {
+		this.route.clear();
+
 	}
 
 	public double angleTrajectory(Coordinate point) {
@@ -48,14 +62,14 @@ public class ShortestPathCar extends Car {
 		ang = ((Math.PI * 2) + ang) % (Math.PI * 2);
 		ang = (Math.PI * 2) - ang;
 		return ang;
-
 	}
 
 	@ScheduledMethod(start = 1, interval = 1)
 	public void move() {
 
 		ACLMessage msg = receive();
-		outerloop: while (msg != null) {
+
+		while (msg != null) {
 			if (isSemaphoreAgent(msg.getSender())) {
 				Coordinate coordinate;
 				boolean isGreen;
@@ -73,15 +87,49 @@ public class ShortestPathCar extends Car {
 
 				if (ContextManager.agentTraffiProjection.getGeometry(this).getCentroid().distance(p) < 0.00001) {
 					move = isGreen;
-					if (!isGreen) {
-						break outerloop;
+				}
+
+				Iterator<Junction> junctions = ContextManager.junctionContext.getObjects(Junction.class).iterator();
+
+				while (junctions.hasNext()) {
+					Junction j = junctions.next();
+					if (ContextManager.junctionProjection.getGeometry(j).equals(p)) {
+						semaphores.add(j);
+						break;
+					}
+				}
+
+			} else if (isRadioAgent(msg.getSender())) {
+
+				String[] parsedMessage = msg.getContent().split(":");
+
+				if (parsedMessage.length > 0) {
+					if (parsedMessage[0].equals("TRAFFIC INFO")) {
+						String[] roads = parsedMessage[1].split("%");
+
+						for (int i = 0; i < roads.length; i++) {
+							String[] junctions = roads[i].split(",");
+							if (junctions.length == 3) {
+								roadsInfo.updateRoad(junctions[0], junctions[1], Integer.parseInt(junctions[2]));
+							}
+						}
 					}
 				}
 			}
 			msg = receive();
 		}
 
-		if ((atualIndex < route.size() - 1) && move) {
+		if (atualIndex < route.size() - 1 && move) {
+
+			if (atualIndex != 0 && atualIndexInJunction == 0) {
+				if (this.index == 0) {
+					System.out.println(this.route);
+				}
+				this.runDiskj();
+				if (this.index == 0) {
+					System.out.println(this.route);
+				}
+			}
 
 			Vector<Coordinate> coordsJuntion = route.get(atualIndex).getValue();
 
@@ -89,6 +137,7 @@ public class ShortestPathCar extends Car {
 
 				Coordinate point = coordsJuntion.get(atualIndexInJunction);
 				double ang = this.angleTrajectory(point);
+
 				ContextManager.moveAgentByVector(this, 0.00003 * ContextManager.agentTraffiContext.size(), ang);
 
 				int angl = (int) (ang * 10000);
@@ -125,134 +174,38 @@ public class ShortestPathCar extends Car {
 								radioAtual.addIndexjunctionsCars(
 										new Pair<Junction, Junction>(newsourceJunction, newtargetJunction));
 							}
+
+							recalculateRoute();
+
 						}
 					} else
 						atualIndexInJunction++;
+
 				}
 			}
 		}
 	}
 
-	public void runDFS() {
-		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
-		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
-
-		if (i.equals(f))
-			return;
-
-		Junction actJunction = ContextManager.getJunction(i);
-		Junction finalJunction = ContextManager.getJunction(f);
-
-		List<Junction> visited = new ArrayList<Junction>();
-
-		Stack<Junction> stack = new Stack<Junction>();
-		stack.push(actJunction);
-		visited.add(actJunction);
-
-		while (!stack.isEmpty()) {
-			Junction j = stack.peek();
-			Iterator<Junction> successors = ContextManager.streetNetwork.getSuccessors(j).iterator();
-
-			Junction unvisited = null;
-			while (successors.hasNext()) {
-				unvisited = successors.next();
-				if (!visited.contains(unvisited))
-					break;
-			}
-
-			if (!visited.contains(unvisited)) {
-				visited.add(unvisited);
-				stack.push(unvisited);
-				if (unvisited.equals(finalJunction)) {
-					Stack<Junction> temp = new Stack<Junction>();
-					while (!stack.isEmpty()) {
-						temp.push(stack.peek());
-						stack.pop();
-					}
-
-					List<Junction> juncts = new ArrayList<Junction>();
-					while (!temp.isEmpty()) {
-						juncts.add(temp.peek());
-						temp.pop();
-					}
-
-					defineRoute(juncts);
-					return;
-				}
-			} else {
-				stack.pop();
-			}
-		}
-	}
-
-	public void runBFS() {
-		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
-		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
-
-		if (i.equals(f))
-			return;
-
-		Junction actJunction = ContextManager.getJunction(i);
-		Junction finalJunction = ContextManager.getJunction(f);
-
-		Queue<Junction> queue = new LinkedList<Junction>();
-		List<Junction> visited = new ArrayList<Junction>();
-		Stack<Junction> pathStack = new Stack<Junction>();
-		ArrayList<Junction> shortestPathList = new ArrayList<Junction>();
-
-		queue.add(actJunction);
-		visited.add(actJunction);
-		pathStack.add(actJunction);
-
-		while (!queue.isEmpty()) {
-			Junction j = queue.poll();
-			Iterator<Junction> successors = ContextManager.streetNetwork.getSuccessors(j).iterator();
-
-			while (successors.hasNext()) {
-				Junction n = successors.next();
-
-				if (!visited.contains(n)) {
-					queue.add(n);
-					visited.add(n);
-					pathStack.add(n);
-					if (j.equals(finalJunction))
-						break;
-				}
-			}
-		}
-		Junction node, currSrc = finalJunction;
-		shortestPathList.add(finalJunction);
-
-		while (!pathStack.isEmpty()) {
-			node = pathStack.pop();
-			Iterator<Junction> succ = ContextManager.streetNetwork.getSuccessors(currSrc).iterator();
-			Boolean fin = false;
-
-			while (succ.hasNext()) {
-				Junction ao = succ.next();
-
-				if (ao.equals(node)) {
-					shortestPathList.add(0, node);
-					currSrc = node;
-					if (node.equals(actJunction)) {
-						fin = true;
-					}
-					break;
-				}
-			}
-			if (fin)
-				break;
-		}
-		defineRoute(shortestPathList);
+	public void recalculateRoute() {
+		this.runDiskj();
+		atualIndex = 0;
+		atualIndexInJunction = 0;
 	}
 
 	public void runDiskj() {
+		Coordinate i;
 
-		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
+		if (this.atualIndex != 0) {
+			i = this.route.get(atualIndex).getKey().getCoords();
+		} else {
+			i = new Coordinate(actualPos().getX(), actualPos().getY());
+		}
 		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
 
 		if (i.equals(f))
 			return;
+
+		this.resetroute();
 
 		Junction actJunction = ContextManager.getJunction(i);
 		Junction finalJunction = ContextManager.getJunction(f);
@@ -261,7 +214,6 @@ public class ShortestPathCar extends Car {
 		ArrayList<Junction> shortestPathList = new ArrayList<Junction>();
 
 		resetWeightInJunctions();
-
 		actJunction.setNodeWeight(0);
 
 		queue.add(actJunction);
@@ -278,12 +230,13 @@ public class ShortestPathCar extends Car {
 					n.setNodeWeight(newWeight);
 					n.setPreviousNode(j);
 					queue.add(n);
+
 				}
 			}
 		}
+
 		Junction crawler = finalJunction;
 		shortestPathList.add(finalJunction);
-
 		while (!crawler.equals(actJunction)) {
 			shortestPathList.add(crawler.getPreviousNode());
 			crawler = crawler.getPreviousNode();
@@ -291,23 +244,34 @@ public class ShortestPathCar extends Car {
 
 		Collections.reverse(shortestPathList);
 		defineRoute(shortestPathList);
+
 	}
 
 	public double getRoadWeight(Junction n1, Junction n2) {
 		List<Road> connections = n1.getRoads();
-
 		for (int i = 0; i < connections.size(); i++) {
 			Road road = connections.get(i);
 			ArrayList<Junction> current = road.getJunctions();
 
 			if (current.contains(n1) && current.contains(n2)) {
-				return road.getEdge().getWeight();
+				double roadLenght = road.getEdge().getWeight();
+				double finalWeight = roadLenght
+						+ roadsInfo.getRoadLoad(new Pair<Junction, Junction>(n1, n2)) * 0.3 * roadLenght;
+				if (semaphores.contains(n1)) {
+					finalWeight += 6 * roadLenght;
+					System.out.println("oi1: " + finalWeight);
+				}
+				if (semaphores.contains(n2)) {
+					finalWeight += 6 * roadLenght;
+					System.out.println("oi2: " + finalWeight);
+				}
+				return finalWeight;
 			}
 		}
 		return Double.MAX_VALUE;
 	}
 
-	public void resetWeightInJunctions() {
+	private void resetWeightInJunctions() {
 		Iterator<Junction> junctions = ContextManager.junctionContext.getObjects(Junction.class).iterator();
 
 		while (junctions.hasNext()) {
@@ -352,9 +316,5 @@ public class ShortestPathCar extends Car {
 		}
 		route.add(
 				new Pair<Junction, Vector<Coordinate>>(junctions.get(junctions.size() - 1), new Vector<Coordinate>()));
-	}
-
-	public double getDistance(Coordinate a1, Coordinate a2) {
-		return Math.sqrt(Math.pow((a2.x - a1.x), 2) + Math.pow((a2.y - a1.y), 2));
 	}
 }
