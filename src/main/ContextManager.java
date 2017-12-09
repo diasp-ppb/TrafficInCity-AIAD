@@ -59,6 +59,7 @@ public class ContextManager implements ContextBuilder<Object> {
 	public static GeometryFactory GF = new GeometryFactory();
 
 	public String mapLocation = "./data/gis_data/toy_city/";
+	private boolean contextLaunched = false;
 
 	@Override
 	public Context<Object> build(Context<Object> con) {
@@ -66,10 +67,13 @@ public class ContextManager implements ContextBuilder<Object> {
 		mainContext = con;
 		mainContext.setId("mainContext");
 		
-
-		 Runtime rt = Runtime.instance();
-		 Profile p1 = new ProfileImpl();
-		 mainContainer = rt.createMainContainer(p1);
+		if(!contextLaunched) {
+			Runtime rt = Runtime.instance();
+			 Profile p1 = new ProfileImpl();
+			 mainContainer = rt.createMainContainer(p1);
+			 
+			 contextLaunched = true;
+		}
 
 		try {
 			createRoads();

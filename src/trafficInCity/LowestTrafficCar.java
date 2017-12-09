@@ -26,6 +26,7 @@ public class LowestTrafficCar extends Car {
 	private boolean move;
 	private RoadTrafficIntensity roadsInfo;
 	private int index;
+	List<Junction> semaphores;
 
 	public LowestTrafficCar(Geography<? extends AgentTraffi> space, Point finalPos) {
 		super(space, finalPos);
@@ -34,6 +35,7 @@ public class LowestTrafficCar extends Car {
 		route = new ArrayList<Pair<Junction, Vector<Coordinate>>>();
 		roadsInfo = new RoadTrafficIntensity();
 		move = true;
+		semaphores = new ArrayList<Junction>();
 	}
 
 	public int getIndex() {
@@ -64,7 +66,7 @@ public class LowestTrafficCar extends Car {
 
 	@ScheduledMethod(start = 1, interval = 1)
 	public void move() {
-		
+
 		ACLMessage msg = receive();
 
 		while (msg != null) {
@@ -86,6 +88,17 @@ public class LowestTrafficCar extends Car {
 				if (ContextManager.agentTraffiProjection.getGeometry(this).getCentroid().distance(p) < 0.00001) {
 					move = isGreen;
 				}
+
+				Iterator<Junction> junctions = ContextManager.junctionContext.getObjects(Junction.class).iterator();
+
+				while(junctions.hasNext()) {
+					Junction j = junctions.next();
+					if(ContextManager.junctionProjection.getGeometry(j).equals(p)) {
+						semaphores.add(j);
+						break;
+					}
+				}
+
 			} else if (isRadioAgent(msg.getSender())) {
 
 				String[] parsedMessage = msg.getContent().split(":");
@@ -158,14 +171,14 @@ public class LowestTrafficCar extends Car {
 							Iterator<AgentTraffi> radiosAtual = ContextManager.agentTraffiContext
 									.getObjects(Radio.class).iterator();
 
-							
-							  if(radiosAtual.hasNext()) {
-								  Radio radioAtual = (Radio)radiosAtual.next();
-								  radioAtual.addIndexjunctionsCars(new Pair<Junction,Junction> (newsourceJunction,newtargetJunction));
-							  }
-							  
-							 recalculateRoute();
-							 
+
+							if(radiosAtual.hasNext()) {
+								Radio radioAtual = (Radio)radiosAtual.next();
+								radioAtual.addIndexjunctionsCars(new Pair<Junction,Junction> (newsourceJunction,newtargetJunction));
+							}
+
+							recalculateRoute();
+
 						}
 					} else
 						atualIndexInJunction++;
@@ -244,7 +257,16 @@ public class LowestTrafficCar extends Car {
 
 			if (current.contains(n1) && current.contains(n2)) {
 				double roadLenght = road.getEdge().getWeight();
-				return roadLenght + roadsInfo.getRoadLoad(new Pair<Junction,Junction> (n1,n2))*0.3*roadLenght;
+				double finalWeight = roadLenght + roadsInfo.getRoadLoad(new Pair<Junction,Junction> (n1,n2))*0.3*roadLenght;
+				if(semaphores.contains(n1)) {
+					finalWeight += 6*roadLenght;
+					System.out.println("oi1: " + finalWeight);
+				}
+				if(semaphores.contains(n2)) {
+					finalWeight += 6*roadLenght;
+					System.out.println("oi2: " + finalWeight);
+				}
+				return finalWeight;
 			}
 		}
 		return Double.MAX_VALUE;
