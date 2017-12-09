@@ -15,7 +15,7 @@ public class SemaphoreFactory {
 	public ArrayList<Junction> locationSemaphors = new ArrayList<Junction>();
 
 	public void createAgents(Context<AgentTraffi> semaphoreContext, Geography<AgentTraffi> semaphoreProjection) {
-		int numSemaphors = 15;
+		int numSemaphors = ContextManager.params.getInteger("semNum");
 		Random rand = new Random();
 		
 		Iterator<Junction> junctions = ContextManager.junctionContext.getRandomObjects(Junction.class,numSemaphors).iterator();

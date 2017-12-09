@@ -12,8 +12,8 @@ import repast.simphony.space.gis.Geography;
 
 public class CarFactory {
 	public void createAgents(Context<AgentTraffi> carContext, Geography<AgentTraffi> carProjection) {
-		int numShortestPathCars = 30;
-		int numLowesttrafficCars = 1;
+		int numShortestPathCars = ContextManager.params.getInteger("shortestCarNum");
+		int numLowesttrafficCars = ContextManager.params.getInteger("lowestCarsNum");
 
 		Random rand = new Random();
 

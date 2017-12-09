@@ -23,6 +23,8 @@ import repast.simphony.context.Context;
 import repast.simphony.context.space.gis.GeographyFactoryFinder;
 import repast.simphony.context.space.graph.NetworkBuilder;
 import repast.simphony.dataLoader.ContextBuilder;
+import repast.simphony.engine.environment.RunEnvironment;
+import repast.simphony.parameter.Parameters;
 import repast.simphony.space.gis.Geography;
 import repast.simphony.space.gis.GeographyParameters;
 import repast.simphony.space.gis.SimpleAdder;
@@ -60,6 +62,10 @@ public class ContextManager implements ContextBuilder<Object> {
 
 	public String mapLocation = "./data/gis_data/toy_city/";
 	private boolean contextLaunched = false;
+	
+	
+	public static Parameters params;
+	
 
 	@Override
 	public Context<Object> build(Context<Object> con) {
@@ -76,6 +82,9 @@ public class ContextManager implements ContextBuilder<Object> {
 		}
 
 		try {
+			
+			 params = RunEnvironment.getInstance().getParameters();
+				
 			createRoads();
 			// create Road intersections
 			createJunctions();
