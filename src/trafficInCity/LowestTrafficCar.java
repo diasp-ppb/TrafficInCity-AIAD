@@ -174,7 +174,7 @@ public class LowestTrafficCar extends Car {
 								radioAtual.addIndexjunctionsCars(
 										new Pair<Junction, Junction>(newsourceJunction, newtargetJunction));
 							}
-
+							
 							recalculateRoute();
 
 						}
@@ -187,6 +187,13 @@ public class LowestTrafficCar extends Car {
 	}
 
 	public void recalculateRoute() {
+		Iterator<AgentTraffi> radios = ContextManager.agentTraffiContext.getObjects(Radio.class).iterator();
+	
+		while(radios.hasNext()) {
+			Radio radio = (Radio) radios.next();
+			radio.subIndexjunctionsCars(new Pair<Junction,Junction> (this.route.get(atualIndex).getKey(), this.route.get(atualIndex+1).getKey()));
+		}
+	
 		this.runDiskj();
 		atualIndex = 0;
 		atualIndexInJunction = 0;
@@ -259,11 +266,9 @@ public class LowestTrafficCar extends Car {
 						+ roadsInfo.getRoadLoad(new Pair<Junction, Junction>(n1, n2)) * 0.3 * roadLenght;
 				if (semaphores.contains(n1)) {
 					finalWeight += 6 * roadLenght;
-					System.out.println("oi1: " + finalWeight);
 				}
 				if (semaphores.contains(n2)) {
 					finalWeight += 6 * roadLenght;
-					System.out.println("oi2: " + finalWeight);
 				}
 				return finalWeight;
 			}

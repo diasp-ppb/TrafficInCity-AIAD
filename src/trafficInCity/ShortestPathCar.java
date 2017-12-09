@@ -133,119 +133,6 @@ public class ShortestPathCar extends Car {
 		}
 	}
 
-	public void runDFS() {
-		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
-		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
-
-		if (i.equals(f))
-			return;
-
-		Junction actJunction = ContextManager.getJunction(i);
-		Junction finalJunction = ContextManager.getJunction(f);
-
-		List<Junction> visited = new ArrayList<Junction>();
-
-		Stack<Junction> stack = new Stack<Junction>();
-		stack.push(actJunction);
-		visited.add(actJunction);
-
-		while (!stack.isEmpty()) {
-			Junction j = stack.peek();
-			Iterator<Junction> successors = ContextManager.streetNetwork.getSuccessors(j).iterator();
-
-			Junction unvisited = null;
-			while (successors.hasNext()) {
-				unvisited = successors.next();
-				if (!visited.contains(unvisited))
-					break;
-			}
-
-			if (!visited.contains(unvisited)) {
-				visited.add(unvisited);
-				stack.push(unvisited);
-				if (unvisited.equals(finalJunction)) {
-					Stack<Junction> temp = new Stack<Junction>();
-					while (!stack.isEmpty()) {
-						temp.push(stack.peek());
-						stack.pop();
-					}
-
-					List<Junction> juncts = new ArrayList<Junction>();
-					while (!temp.isEmpty()) {
-						juncts.add(temp.peek());
-						temp.pop();
-					}
-
-					defineRoute(juncts);
-					return;
-				}
-			} else {
-				stack.pop();
-			}
-		}
-	}
-
-	public void runBFS() {
-		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
-		Coordinate f = new Coordinate(finalPos.getX(), finalPos.getY());
-
-		if (i.equals(f))
-			return;
-
-		Junction actJunction = ContextManager.getJunction(i);
-		Junction finalJunction = ContextManager.getJunction(f);
-
-		Queue<Junction> queue = new LinkedList<Junction>();
-		List<Junction> visited = new ArrayList<Junction>();
-		Stack<Junction> pathStack = new Stack<Junction>();
-		ArrayList<Junction> shortestPathList = new ArrayList<Junction>();
-
-		queue.add(actJunction);
-		visited.add(actJunction);
-		pathStack.add(actJunction);
-
-		while (!queue.isEmpty()) {
-			Junction j = queue.poll();
-			Iterator<Junction> successors = ContextManager.streetNetwork.getSuccessors(j).iterator();
-
-			while (successors.hasNext()) {
-				Junction n = successors.next();
-
-				if (!visited.contains(n)) {
-					queue.add(n);
-					visited.add(n);
-					pathStack.add(n);
-					if (j.equals(finalJunction))
-						break;
-				}
-			}
-		}
-		Junction node, currSrc = finalJunction;
-		shortestPathList.add(finalJunction);
-
-		while (!pathStack.isEmpty()) {
-			node = pathStack.pop();
-			Iterator<Junction> succ = ContextManager.streetNetwork.getSuccessors(currSrc).iterator();
-			Boolean fin = false;
-
-			while (succ.hasNext()) {
-				Junction ao = succ.next();
-
-				if (ao.equals(node)) {
-					shortestPathList.add(0, node);
-					currSrc = node;
-					if (node.equals(actJunction)) {
-						fin = true;
-					}
-					break;
-				}
-			}
-			if (fin)
-				break;
-		}
-		defineRoute(shortestPathList);
-	}
-
 	public void runDiskj() {
 
 		Coordinate i = new Coordinate(actualPos().getX(), actualPos().getY());
@@ -283,7 +170,7 @@ public class ShortestPathCar extends Car {
 		}
 		Junction crawler = finalJunction;
 		shortestPathList.add(finalJunction);
-
+		
 		while (!crawler.equals(actJunction)) {
 			shortestPathList.add(crawler.getPreviousNode());
 			crawler = crawler.getPreviousNode();
@@ -292,6 +179,8 @@ public class ShortestPathCar extends Car {
 		Collections.reverse(shortestPathList);
 		defineRoute(shortestPathList);
 	}
+	
+	
 
 	public double getRoadWeight(Junction n1, Junction n2) {
 		List<Road> connections = n1.getRoads();
